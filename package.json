@@ -1,6 +1,6 @@
 {
-  "name": "simple-md-viewer",
-  "version": "1.0.0",
+  "name": "@asafarim/simple-md-viewer",
+  "version": "1.0.1",
   "description": "A simple markdown viewer that displays files from a specified folder",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "start": "concurrently \"pnpm run dev\" \"pnpm run serve\""
   },
   "dependencies": {
+    "@asafarim/shared": "^1.0.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "react": "^18.2.0",
