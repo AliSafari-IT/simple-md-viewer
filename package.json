@@ -18,7 +18,9 @@
   "author": "Ali Safari",
   "files": [
     "dist",
-    "md-docs"
+    "md-docs",
+    "server.js",
+    "readme.md"
   ],
   "dependencies": {
     "@asafarim/shared": "^1.0.3",

@@ -17,6 +17,10 @@ A beautiful, responsive markdown viewer that displays files from a specified fol
 - ♿ **Accessible** - Keyboard navigation and screen reader friendly
 - 🔗 **Deep Linking** - Share direct links to specific markdown files
 
+## 📸 Markdown Explorer Viewer Demo
+
+![Markdown Explorer Viewer Demo](./smv.png)
+
 ## 🚀 Quick Start
 
 ### Installation
