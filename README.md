@@ -19,7 +19,8 @@ A beautiful, responsive markdown viewer that displays files from a specified fol
 
 ## 📸 Markdown Explorer Viewer Demo
 
-![Markdown Explorer Viewer Demo](./smv.png)
+<!-- Image will be displayed once the smv.png file is committed to the repository -->
+![Markdown Explorer Viewer Demo](./public/smv.png)
 
 ## 🚀 Quick Start
 
