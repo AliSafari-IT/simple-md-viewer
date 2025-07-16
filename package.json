@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/simple-md-viewer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple markdown viewer that displays files from a specified folder",
   "main": "index.js",
   "scripts": {
@@ -44,5 +44,13 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   },
+  "keywords": [
+    "asafarim",
+    "markdown",
+    "viewer",
+    "file-explorer",
+    "markdown-viewer",
+    "file-explorer-viewer"
+  ],
   "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
 }
