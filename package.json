@@ -22,6 +22,9 @@
     "server.js",
     "readme.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@asafarim/shared": "^1.0.3",
     "cors": "^2.8.5",
