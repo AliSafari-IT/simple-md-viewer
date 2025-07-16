@@ -228,6 +228,65 @@ jobs:
 
       - name: Build application
         run: pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Create static API responses for demo
+        run: |
+          # Create mock API responses for the static demo
+          mkdir -p dist/api
+          
+          # Create folder structure API response
+          cat > dist/api/folder-structure << 'EOF'
+          {
+            "nodes": [
+              {
+                "name": "README.md",
+                "path": "README.md", 
+                "type": "file"
+              },
+              {
+                "name": "docs",
+                "path": "docs",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "installation.md",
+                    "path": "docs/installation.md",
+                    "type": "file"
+                  }
+                ]
+              },
+              {
+                "name": "examples", 
+                "path": "examples",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "basic-usage.md",
+                    "path": "examples/basic-usage.md", 
+                    "type": "file"
+                  }
+                ]
+              },
+              {
+                "name": "api",
+                "path": "api", 
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "reference.md",
+                    "path": "api/reference.md",
+                    "type": "file"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          
+          # Copy markdown files to dist for static serving
+          cp -r public/md-docs dist/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -236,3 +295,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
+          cname: false

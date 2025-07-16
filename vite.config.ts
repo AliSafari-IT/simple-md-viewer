@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
 import historyFallback from './vite-history-fallback';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react(), historyFallback()],
+  base: mode === 'production' ? '/simple-md-viewer/' : '/',
   server: {
     port: 3501,
     strictPort: true,
@@ -21,11 +21,6 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true
   },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src')
-    }
-  },
   // Add this to handle client-side routing in preview mode
   appType: 'spa'
-});
+}));
