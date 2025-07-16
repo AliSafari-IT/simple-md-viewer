@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // This script handles direct navigation to routes
+    // It redirects all 404s back to the index.html with the original path preserved
+    (function() {
+      // Get the current path
+      var path = window.location.pathname;
+      
+      // Redirect to the index.html with the path as a query parameter
+      window.location.href = '/?' + 
+        (path.startsWith('/') ? path.substring(1) : path);
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
