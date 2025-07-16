@@ -12,8 +12,8 @@ app.use("/md-docs", express.static(mdDocsPath));
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: "http://localhost:3501",
-    credentials: false
+    origin: ["http://localhost:3501", "https://alisafari-it.github.io"],
+      credentials: false
   })
 );
 
