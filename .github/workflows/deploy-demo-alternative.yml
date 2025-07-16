@@ -1,0 +1,238 @@
+name: Deploy Simple Markdown Viewer Demo (Alternative)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare demo content
+        run: |
+          # Ensure we have demo content
+          mkdir -p public/md-docs
+          
+          # Copy existing md-docs content or create sample
+          if [ -d "md-docs" ]; then
+            echo "Copying existing md-docs content..."
+            cp -r md-docs/* public/md-docs/
+          else
+            echo "Creating sample demo content..."
+            cat > public/md-docs/README.md << 'EOF'
+          # 📖 Simple Markdown Viewer Demo
+          
+          Welcome to the live demonstration of **Simple Markdown Viewer**!
+          
+          ## ✨ Features Showcase
+          
+          This demo showcases all the key features:
+          
+          - 🎨 **Dual Theme Support** - Try the theme toggle in the header
+          - 📱 **Responsive Design** - Resize your browser window
+          - 🌳 **Interactive File Tree** - Navigate through the files
+          - 🔗 **Deep Linking** - Each file has its own URL
+          
+          ## 🚀 Getting Started
+          
+          Navigate through the files using the sidebar to explore different sections:
+          
+          - **Documentation** - Learn how to use the viewer
+          - **Examples** - See code samples and use cases
+          - **API Reference** - Technical documentation
+          
+          ## 📦 Installation
+          
+          ```bash
+          npm install @asafarim/simple-md-viewer
+          ```
+          
+          ## 🔗 Links
+          
+          - [GitHub Repository](https://github.com/AliSafari-IT/simple-md-viewer)
+          - [npm Package](https://www.npmjs.com/package/@asafarim/simple-md-viewer)
+          
+          ---
+          
+          **Built with ❤️ using Simple Markdown Viewer**
+          EOF
+          
+            # Create additional demo files
+            mkdir -p public/md-docs/docs
+            cat > public/md-docs/docs/installation.md << 'EOF'
+          # 📥 Installation Guide
+          
+          ## Package Manager Installation
+          
+          ### Using npm
+          ```bash
+          npm install @asafarim/simple-md-viewer
+          ```
+          
+          ### Using yarn
+          ```bash
+          yarn add @asafarim/simple-md-viewer
+          ```
+          
+          ### Using pnpm
+          ```bash
+          pnpm add @asafarim/simple-md-viewer
+          ```
+          
+          ## Quick Setup
+          
+          1. Install the package
+          2. Set up your markdown files
+          3. Configure the server
+          4. Start the application
+          
+          See the main README for detailed setup instructions.
+          EOF
+          
+            mkdir -p public/md-docs/examples
+            cat > public/md-docs/examples/basic-usage.md << 'EOF'
+          # 🎯 Basic Usage Example
+          
+          Here's how to set up a basic markdown viewer:
+          
+          ## Project Structure
+          
+          ```
+          my-docs/
+          ├── package.json
+          ├── server.js
+          ├── md-docs/
+          │   ├── README.md
+          │   └── docs/
+          │       └── guide.md
+          └── dist/
+          ```
+          
+          ## Server Configuration
+          
+          ```javascript
+          const express = require('express');
+          const app = express();
+          
+          // Serve your markdown files
+          app.use('/md-docs', express.static('./md-docs'));
+          
+          // API endpoints for file tree and content
+          app.get('/api/folder-structure', getFolderStructure);
+          app.get('/api/file', getFileContent);
+          
+          app.listen(3500);
+          ```
+          
+          ## Features Demonstrated
+          
+          - ✅ File tree navigation
+          - ✅ Markdown rendering
+          - ✅ Theme switching
+          - ✅ Responsive design
+          - ✅ URL-based routing
+          EOF
+          
+            mkdir -p public/md-docs/api
+            cat > public/md-docs/api/reference.md << 'EOF'
+          # 🔧 API Reference
+          
+          ## Server Endpoints
+          
+          ### GET /api/folder-structure
+          
+          Returns the file tree structure of markdown documents.
+          
+          **Response:**
+          ```json
+          {
+            "nodes": [
+              {
+                "name": "README.md",
+                "path": "README.md",
+                "type": "file"
+              },
+              {
+                "name": "docs",
+                "path": "docs",
+                "type": "folder",
+                "children": [...]
+              }
+            ]
+          }
+          ```
+          
+          ### GET /api/file?path={filePath}
+          
+          Returns the content of a specific markdown file.
+          
+          **Parameters:**
+          - `path` (string): Relative path to the markdown file
+          
+          **Response:**
+          ```json
+          {
+            "content": "# File Content\n\nMarkdown content here...",
+            "path": "docs/example.md"
+          }
+          ```
+          
+          ## Component Props
+          
+          ### FileTree Component
+          
+          ```typescript
+          interface FileTreeProps {
+            fileTree: FileNode | null;
+            onFileSelect: (path: string) => void;
+            selectedFile: string | null;
+          }
+          ```
+          
+          ### MarkdownViewer Component
+          
+          ```typescript
+          interface MarkdownViewerProps {
+            content: string;
+          }
+          ```
+          EOF
+          fi
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true

@@ -36,11 +36,29 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Create demo content # Ensure we have content to serve
+        run: |
+          # Create public/md-docs directory if it doesn't exist
+          mkdir -p public/md-docs
+          # Copy existing md-docs or create sample content
+          if [ -d "md-docs" ]; then
+            cp -r md-docs/* public/md-docs/
+          else
+            # Create sample content for the demo
+            echo "# Welcome to Simple Markdown Viewer Demo" > public/md-docs/README.md
+            echo "This is a demonstration of the Simple Markdown Viewer package." >> public/md-docs/README.md
+            mkdir -p public/md-docs/docs
+            echo "# Getting Started" > public/md-docs/docs/getting-started.md
+            echo "This is a sample documentation file." >> public/md-docs/docs/getting-started.md
+          fi
+
       - name: Build showcase # for the project @asafarim/simple-md-viewer
         run: pnpm build 
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
