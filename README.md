@@ -495,12 +495,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 Email: [your-email@example.com](mailto:your-email@example.com)
-- 🐛 Issues: [GitHub Issues](https://github.com/your-username/simple-md-viewer/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/your-username/simple-md-viewer/discussions)
+- 📧 Email: [contact@asafarim.com](mailto:contact@asafarim.com)
+- 🐛 Issues: [GitHub Issues](https://github.com/AliSafari-IT/simple-md-viewer/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/AliSafari-IT/simple-md-viewer/discussions)
 
 ---
 
-**Made with ❤️ by [Your Name](https://github.com/your-username)**
+**Made with ❤️ by [SMV simple-md-viewer](https://github.com/AliSafari-IT/simple-md-viewer)**
 
 *Happy documenting! 📖✨*
