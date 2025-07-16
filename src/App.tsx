@@ -10,6 +10,7 @@ import MarkdownViewer from "./components/MarkdownViewer";
 import FileTree from "./components/FileTree";
 import { FileNode } from "./types";
 import { PackageLinks } from "@asafarim/shared";
+import "./App.css";
 
 // Main content component that handles file loading and display
 const MarkdownContent: React.FC = () => {
@@ -166,8 +167,18 @@ const MarkdownContent: React.FC = () => {
   return (
     <div className={`app ${theme}`}>
       <header className="header">
-        <h1>Simple Markdown Viewer</h1>
-
+        <div className="logo-container">
+          <img
+            src="/logo.svg"
+            alt="Simple Markdown Viewer Logo"
+            className="logo"
+            onClick={() => navigate("/")}
+          />
+          <h1 className="title">SMV</h1>
+          <p className="subtitle">
+            A simple markdown viewer that displays files from a specified folder
+          </p>
+        </div>
         <PackageLinks
           packageName="@asafarim/simple-md-viewer"
           githubPath="simple-md-viewer"
