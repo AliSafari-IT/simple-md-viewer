@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileNode } from '../types';
 
 interface FileTreeProps {
@@ -8,17 +8,64 @@ interface FileTreeProps {
 }
 
 const FileTree: React.FC<FileTreeProps> = ({ fileTree, onFileSelect, selectedFile }) => {
-  const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({});
+  const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>(() => {
+    // Load expanded state from localStorage
+    const saved = localStorage.getItem('md-viewer-expanded-folders');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  // Save expanded state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('md-viewer-expanded-folders', JSON.stringify(expandedFolders));
+  }, [expandedFolders]);
+
+  // Auto-expand parent folders when selectedFile changes
+  useEffect(() => {
+    if (selectedFile && fileTree) {
+      const pathsToExpand = getParentPaths(selectedFile);
+      const newExpanded = { ...expandedFolders };
+      let hasChanges = false;
+
+      pathsToExpand.forEach(path => {
+        if (!newExpanded[path]) {
+          newExpanded[path] = true;
+          hasChanges = true;
+        }
+      });
+
+      if (hasChanges) {
+        setExpandedFolders(newExpanded);
+      }
+    }
+  }, [selectedFile, fileTree]);
+
+  // Helper function to get all parent folder paths for a given file path
+  const getParentPaths = (filePath: string): string[] => {
+    const parts = filePath.split('/');
+    const paths: string[] = [];
+    
+    for (let i = 1; i < parts.length; i++) {
+      const path = parts.slice(0, i).join('/');
+      if (path) {
+        paths.push(path);
+      }
+    }
+    
+    return paths;
+  };
 
   if (!fileTree) {
     return <div>No files available</div>;
   }
 
   const toggleFolder = (path: string) => {
-    setExpandedFolders(prev => ({
-      ...prev,
-      [path]: !prev[path]
-    }));
+    setExpandedFolders(prev => {
+      const newState = {
+        ...prev,
+        [path]: !prev[path]
+      };
+      return newState;
+    });
   };
 
   const renderNode = (node: FileNode, level = 0) => {
