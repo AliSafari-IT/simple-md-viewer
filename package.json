@@ -9,6 +9,17 @@
     "serve": "npx kill-port 3500 && node server.js --watch",
     "start": "concurrently \"pnpm run dev\" \"pnpm run serve\""
   },
+  "homepage": "https://alisafari-it.github.io/simple-md-viewer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alisafari-it/simple-md-viewer.git"
+  },
+  "license": "MIT",
+  "author": "Ali Safari",
+  "files": [
+    "dist",
+    "md-docs"
+  ],
   "dependencies": {
     "@asafarim/shared": "^1.0.3",
     "cors": "^2.8.5",

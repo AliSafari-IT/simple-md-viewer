@@ -13,7 +13,7 @@ app.use("/md-docs", express.static(mdDocsPath));
 app.use(
   cors({
     origin: ["http://localhost:3501", "https://alisafari-it.github.io"],
-      credentials: false
+    credentials: false,
   })
 );
 
