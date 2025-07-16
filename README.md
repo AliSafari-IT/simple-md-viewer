@@ -431,7 +431,7 @@ jobs:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/simple-md-viewer.git
+git clone https://github.com/AliSafari-IT/simple-md-viewer.git
 cd simple-md-viewer
 
 # Install dependencies
