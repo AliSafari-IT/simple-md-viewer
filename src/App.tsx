@@ -103,24 +103,74 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
   const fetchFileTree = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        "http://localhost:3500/api/folder-structure"
-      );
-      const data = await response.json();
-
-      if (data && data.nodes) {
-        setFileTree({
+      
+      // Check if we're running on GitHub Pages
+      if (window.location.hostname === 'alisafari-it.github.io') {
+        // For GitHub Pages, we'll use a static file structure since we don't have a backend server
+        // This is a simplified file tree that represents the main markdown files in the repository
+        const staticFileTree: FileNode = {
           name: "root",
           path: "",
-          type: "folder",
-          children: data.nodes,
-        });
+          type: 'folder' as const,
+          children: [
+            {
+              name: "README.md",
+              path: "README.md",
+              type: 'file' as const
+            },
+            {
+              name: "CHANGELOG.md",
+              path: "CHANGELOG.md",
+              type: 'file' as const
+            },
+            {
+              name: "CONTRIBUTING.md",
+              path: "CONTRIBUTING.md",
+              type: 'file' as const
+            },
+            {
+              name: "docs",
+              path: "docs",
+              type: 'folder' as const,
+              children: [
+                {
+                  name: "API.md",
+                  path: "docs/API.md",
+                  type: 'file' as const
+                },
+                {
+                  name: "USAGE.md",
+                  path: "docs/USAGE.md",
+                  type: 'file' as const
+                }
+              ]
+            }
+          ]
+        };
+        
+        setFileTree(staticFileTree);
+        setLoading(false);
+      } else {
+        // For local development, use the API
+        const response = await fetch(
+          "http://localhost:3500/api/folder-structure"
+        );
+        const data = await response.json();
+
+        if (data && data.nodes) {
+          setFileTree({
+            name: "root",
+            path: "",
+            type: "folder",
+            children: data.nodes,
+          });
+        }
+        setLoading(false);
       }
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching file tree:", error);
       setError(
-        "Failed to load file tree. Please make sure the server is running."
+        "Failed to load file tree. Please check your connection or try again later."
       );
       setLoading(false);
     }
@@ -140,24 +190,55 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
       // Normalize the path by removing any leading slash
       const normalizedPath = path.startsWith("/") ? path.substring(1) : path;
 
-      const response = await fetch(
-        `http://localhost:3500/api/file?path=${normalizedPath}`
-      );
-      
-      if (response.status === 404) {
-        setError(`File not found: ${path}`);
-        setMarkdownContent("");
-        setLoading(false);
-        return;
-      }
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch file: ${response.statusText}`);
-      }
+      // Check if we're running on GitHub Pages
+      if (window.location.hostname === 'alisafari-it.github.io') {
+        // For GitHub Pages, try to fetch the file directly from GitHub raw content
+        // Extract the file path from the normalized path
+        try {
+          const response = await fetch(
+            `https://raw.githubusercontent.com/alisafari-it/simple-md-viewer/main/md-docs/${normalizedPath}`
+          );
+          
+          if (response.status === 404) {
+            setError(`File not found: ${path}`);
+            setMarkdownContent("");
+            setLoading(false);
+            return;
+          }
+          
+          if (!response.ok) {
+            throw new Error(`Failed to fetch file: ${response.statusText}`);
+          }
 
-      const data = await response.json();
-      setMarkdownContent(data.content);
-      setError(""); // Clear any previous errors
+          const content = await response.text();
+          setMarkdownContent(content);
+          setError(""); // Clear any previous errors
+        } catch (error) {
+          console.error('Error fetching from GitHub raw content:', error);
+          setError(`Failed to load markdown content. The file may not exist.`);
+          setMarkdownContent("");
+        }
+      } else {
+        // For local development, use the API
+        const response = await fetch(
+          `http://localhost:3500/api/file?path=${normalizedPath}`
+        );
+        
+        if (response.status === 404) {
+          setError(`File not found: ${path}`);
+          setMarkdownContent("");
+          setLoading(false);
+          return;
+        }
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch file: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setMarkdownContent(data.content);
+        setError(""); // Clear any previous errors
+      }
       setLoading(false);
     } catch (error) {
       console.error("Error fetching markdown content:", error);

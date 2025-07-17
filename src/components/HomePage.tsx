@@ -34,11 +34,25 @@ const HomePage: React.FC<HomePageProps> = ({ fileTree, findReadmeNode, loading }
 
   const fetchFileContent = async (path: string) => {
     try {
-      const response = await fetch(
-        `http://localhost:3500/api/file?path=${path}`
-      );
-      const data = await response.json();
-      setRootReadmeContent(data.content);
+      // For GitHub Pages deployment, we need to use a different approach
+      // since we don't have a backend server there
+      if (window.location.hostname === 'alisafari-it.github.io') {
+        // For GitHub Pages, try to fetch the README.md directly from the repo
+        const response = await fetch(
+          `https://raw.githubusercontent.com/alisafari-it/simple-md-viewer/main/md-docs/README.md`
+        );
+        if (response.ok) {
+          const content = await response.text();
+          setRootReadmeContent(content);
+        }
+      } else {
+        // For local development, use the API
+        const response = await fetch(
+          `http://localhost:3500/api/file?path=${path}`
+        );
+        const data = await response.json();
+        setRootReadmeContent(data.content);
+      }
     } catch (error) {
       console.error('Error fetching file content:', error);
     }
