@@ -12,7 +12,7 @@
     "predeploy": "pnpm run build",
     "deploy": "npx gh-pages -d dist"
   },
-  "homepage": "https://alisafari-it.github.io/simple-md-viewer/#/",
+  "homepage": "https://alisafari-it.github.io/simple-md-viewer/#/README.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/alisafari-it/simple-md-viewer.git"
