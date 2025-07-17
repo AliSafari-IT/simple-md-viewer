@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/simple-md-viewer",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "A simple markdown viewer that displays files from a specified folder",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,10 @@
     "dist",
     "md-docs",
     "server.js",
-    "readme.md"
+    "readme.md",
+    "smv-logo.svg",
+    "favicon.ico",
+    "public"
   ],
   "publishConfig": {
     "access": "public"
