@@ -26,11 +26,14 @@
     })();
   </script>
   <script type="module" crossorigin src="/simple-md-viewer/assets/index.js"></script>
-  <link rel="stylesheet" href="/simple-md-viewer/assets/style.css">
+  <link rel="stylesheet" href="/simple-md-viewer/assets/index.css">
 </head>
 <body>
   <div id="root"></div>
-  <!-- For development and production -->
+  <!-- For development -->
   
+  
+  <!-- For GitHub Pages deployment - helps fix MIME type issues -->
+  <script src="./fix-mime.js"></script>
 </body>
 </html>
