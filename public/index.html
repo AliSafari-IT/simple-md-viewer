@@ -9,21 +9,28 @@
     // This script helps with client-side routing
     // It ensures that direct navigation to routes works correctly
     (function() {
-      // Save the current path before the single-page app loads
-      const path = window.location.pathname;
+      // For GitHub Pages with HashRouter, we don't need to modify the path
+      // HashRouter will handle the routing after the # symbol
+      const isGitHubPages = window.location.hostname === 'alisafari-it.github.io';
       
-      // Listen for the app to load
-      window.addEventListener('load', function() {
-        // If we're not at the root, we need to handle the route
-        if (path !== '/' && !path.includes('.')) {
-          // Let the app handle routing once it's loaded
-          setTimeout(() => {
-            window.history.replaceState(null, '', path);
-            // Dispatch a popstate event to trigger route handling
-            window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
-          }, 100);
-        }
-      });
+      if (!isGitHubPages) {
+        // Only do this for local development
+        // Save the current path before the single-page app loads
+        const path = window.location.pathname;
+        
+        // Listen for the app to load
+        window.addEventListener('load', function() {
+          // If we're not at the root, we need to handle the route
+          if (path !== '/' && !path.includes('.')) {
+            // Let the app handle routing once it's loaded
+            setTimeout(() => {
+              window.history.replaceState(null, '', path);
+              // Dispatch a popstate event to trigger route handling
+              window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+            }, 100);
+          }
+        });
+      }
     })();
   </script>
 </head>

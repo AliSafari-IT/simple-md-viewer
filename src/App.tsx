@@ -417,8 +417,9 @@ const App: React.FC = () => {
     document.body.className = appTheme;
   }, []);
 
-  // We've updated the Vite config to use a consistent base path for all environments
-  
+  // For GitHub Pages with HashRouter, we need to ensure the base path is handled correctly
+  // The base URL is set in vite.config.ts for asset loading
+  // We've updated index.html to handle GitHub Pages routing specifically
   return (
     <ThemeContext.Provider value={{ theme: appTheme, toggleTheme: toggleAppTheme }}>
       <HashRouter>
