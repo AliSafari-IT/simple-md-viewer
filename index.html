@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="/simple-md-viewer/favicon.ico" />
+  <link rel="icon" href="./favicon.ico" />
   <title>SMV | @asafarim/simple-md-viewer</title>
   <script>
     // Redirect non-hash URLs to hash URLs
@@ -28,10 +28,7 @@
 </head>
 <body>
   <div id="root"></div>
-  <!-- For development -->
+  <!-- For development and production -->
   <script type="module" src="./src/main.tsx"></script>
-  
-  <!-- For GitHub Pages deployment - helps fix MIME type issues -->
-  <script src="./fix-mime.js"></script>
 </body>
 </html>

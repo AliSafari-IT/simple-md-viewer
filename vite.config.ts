@@ -21,12 +21,16 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    // Ensure proper MIME types for GitHub Pages
+    // Use a more compatible build configuration for GitHub Pages
+    target: 'es2015',
+    minify: 'terser',
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
-        // Remove hashes from filenames to avoid MIME type issues
+        // Use a format that's more compatible with GitHub Pages
+        format: 'iife',
         entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/chunk-[name].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name].[ext]'
       }
     }
