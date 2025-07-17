@@ -417,13 +417,15 @@ const App: React.FC = () => {
     document.body.className = appTheme;
   }, []);
 
+  // We've updated the Vite config to use a consistent base path for all environments
+  
   return (
     <ThemeContext.Provider value={{ theme: appTheme, toggleTheme: toggleAppTheme }}>
       <HashRouter>
         <Routes>
           {/* Handle the root path */}
           <Route path="/" element={<MarkdownContent showHomePage={true} />} />
-
+          
           {/* Handle any path, including nested paths with slashes */}
           <Route path="/*" element={<MarkdownContent showHomePage={false} />} />
         </Routes>
