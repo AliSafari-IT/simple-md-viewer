@@ -1,10 +1,12 @@
 import { Plugin } from 'vite';
+import type { Connect } from 'vite';
+import type { ServerResponse } from 'http';
 
 export default function historyFallback(): Plugin {
   return {
     name: 'history-fallback',
     configureServer(server) {
-      server.middlewares.use((req, res, next) => {
+      server.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
         // Skip API calls, Vite internal modules, and static assets
         if (
           req.url?.startsWith('/api/') ||

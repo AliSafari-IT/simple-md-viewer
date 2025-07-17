@@ -1,0 +1,186 @@
+/* Responsive Sidebar Styles */
+
+/* Sidebar toggle button - only visible on mobile */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #4a6cf7; /* Solid color instead of gradient for better compatibility */
+  color: white;
+  border: 3px solid white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  z-index: 9999; /* Highest z-index to ensure it's above everything */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  padding: 0;
+}
+
+.dark .sidebar-toggle {
+  background: #6d7cff; /* Brighter blue for dark mode */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(109, 124, 255, 0.5);
+  border-color: #222;
+}
+
+.sidebar-toggle:hover {
+  transform: scale(1.05);
+}
+
+/* Center the icons in the toggle button */
+.toggle-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Enhanced sidebar for mobile */
+/* Mobile sidebar toggle container to ensure it's always visible */
+.mobile-sidebar-toggle-container {
+  display: none;
+}
+
+/* Always show the sidebar toggle on mobile regardless of other styles */
+@media (max-width: 768px) {
+  .mobile-sidebar-toggle-container {
+    display: block;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    pointer-events: auto;
+  }
+  
+  .sidebar-toggle {
+    display: flex !important; /* Use !important to override any other styles */
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    border-right: 1px solid;
+    border-bottom: none;
+    max-height: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding-top: calc(var(--spacing-lg) + 60px); /* Add space for header */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    background-color: #f8f9fa; /* Solid background in light mode with better contrast */
+  }
+
+  .dark .sidebar {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    background-color: #252526; /* Slightly lighter dark background for better contrast */
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  /* Overlay when sidebar is open */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    backdrop-filter: blur(3px);
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+
+  /* Adjust main content when sidebar is open */
+  .main.sidebar-open .content {
+    filter: blur(3px);
+    pointer-events: none;
+    transition: filter 0.3s ease;
+  }
+
+  /* File tree adjustments for mobile */
+  .file-tree {
+    padding-bottom: var(--spacing-xxl);
+  }
+
+  .folder-node, .file-node {
+    padding: var(--spacing-md);
+    margin: var(--spacing-sm) 0;
+  }
+
+  /* Larger touch targets for mobile */
+  .folder-icon, .file-icon {
+    font-size: 1.2rem;
+    margin-right: var(--spacing-md);
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 90%;
+    padding: var(--spacing-sm);
+    padding-top: calc(var(--spacing-md) + 60px);
+  }
+
+  .sidebar-toggle {
+    width: 55px;
+    height: 55px;
+    font-size: 1.3rem;
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  /* Make file tree items easier to tap on small screens */
+  .folder-node, .file-node {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs) 0;
+    border-radius: var(--radius-md);
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: background-color 0.2s ease;
+  }
+  
+  .folder-node:hover, .file-node:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+  
+  .dark .folder-node, .dark .file-node {
+    background-color: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark .folder-node:hover, .dark .file-node:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+  
+  /* Ensure toggle button is always visible */
+  .mobile-sidebar-toggle-container {
+    bottom: 15px;
+    right: 15px;
+  }
+}
