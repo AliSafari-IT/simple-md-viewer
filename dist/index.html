@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Markdown Viewer</title>
+  <script>
+    // Redirect non-hash URLs to hash URLs
+    (function() {
+      // Skip if we're already using a hash URL
+      if (window.location.hash) return;
+      
+      // Skip for the root path
+      if (window.location.pathname === '/' || window.location.pathname === '/index.html') return;
+      
+      // Convert the path to a hash URL
+      var path = window.location.pathname;
+      // Remove leading slash if present
+      if (path.startsWith('/')) {
+        path = path.substring(1);
+      }
+      
+      // Redirect to the hash URL
+      window.location.href = window.location.origin + '/#/' + path + window.location.search;
+    })();
+  </script>
+  <script type="module" crossorigin src="/simple-md-viewer/assets/index-1c85ada5.js"></script>
+  <link rel="stylesheet" href="/simple-md-viewer/assets/index-9ec56127.css">
+</head>
+<body>
+  <div id="root"></div>
+  
+</body>
+</html>
