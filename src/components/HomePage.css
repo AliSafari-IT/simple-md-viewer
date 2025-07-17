@@ -1,18 +1,18 @@
 .home-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding: var(--spacing-xl) var(--spacing-md);
+  font-family: var(--font-family-primary);
 }
 
 .hero-section {
   text-align: center;
-  padding: 3rem 1rem;
-  margin-bottom: 3rem;
+  padding: var(--spacing-xxl) var(--spacing-md);
+  margin-bottom: var(--spacing-xxl);
 }
 
 .logo-container {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .app-logo {
@@ -21,19 +21,19 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--gradient-primary-light);
   color: white;
   font-size: 1.8rem;
   font-weight: bold;
   border-radius: 12px;
-  margin-bottom: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-light);
 }
 
 .hero-section h1 {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  margin-bottom: var(--spacing-md);
+  background: var(--gradient-primary-light);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -41,23 +41,27 @@
 
 .tagline {
   font-size: 1.25rem;
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
+  color: var(--text-color-light);
+  margin-bottom: var(--spacing-xl);
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 }
 
+.dark .tagline {
+  color: var(--text-color-dark);
+}
+
 .cta-buttons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
   flex-wrap: wrap;
 }
 
 .primary-button, .secondary-button {
-  padding: 0.75rem 1.5rem;
+  padding: var(--spacing-sm) var(--spacing-lg);
   border-radius: 8px;
   font-weight: 500;
   font-size: 1rem;
@@ -69,86 +73,112 @@
 }
 
 .primary-button {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--gradient-primary-light);
   color: white;
   border: none;
-  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow-light);
 }
 
 .primary-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 10px -1px rgba(99, 102, 241, 0.3);
+  box-shadow: var(--shadow-hover-light);
 }
 
 .primary-button:disabled {
-  background: #d1d5db;
+  background: var(--border-color-light);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
+.dark .primary-button:disabled {
+  background: var(--border-color-dark);
+}
+
 .secondary-button {
   background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  color: var(--text-color-light);
+  border: 1px solid var(--border-color-light);
 }
 
 .secondary-button:hover {
-  background: var(--bg-hover);
+  background: var(--hover-color-light);
+}
+
+.dark .secondary-button {
+  color: var(--text-color-dark);
+  border: 1px solid var(--border-color-dark);
+}
+
+.dark .secondary-button:hover {
+  background: var(--hover-color-dark);
 }
 
 .features-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xxl);
 }
 
 .feature {
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   border-radius: 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: var(--bg-color-light);
+  border: 1px solid var(--border-color-light);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-align: center;
 }
 
 .feature:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-hover-light);
+}
+
+.dark .feature {
+  background: var(--bg-color-dark);
+  border: 1px solid var(--border-color-dark);
+}
+
+.dark .feature:hover {
+  box-shadow: var(--shadow-hover-dark);
 }
 
 .feature-icon {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .feature h3 {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--spacing-sm);
   font-size: 1.25rem;
+  color: var(--text-color-light);
 }
 
 .feature p {
-  color: var(--text-secondary);
+  color: var(--text-color-light);
+  opacity: 0.8;
   line-height: 1.5;
 }
 
-/* Dark mode adjustments */
-:root {
-  --bg-card: #ffffff;
-  --border-color: #e5e7eb;
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --bg-hover: #f9fafb;
+.dark .feature h3 {
+  color: var(--text-color-dark);
 }
 
-[data-theme="dark"] .home-page {
-  --bg-card: #1f2937;
-  --border-color: #374151;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --bg-hover: #374151;
+.dark .feature p {
+  color: var(--text-color-dark);
+  opacity: 0.8;
 }
+
+.markdown-viewer-wrapper {
+  margin-top: var(--spacing-xxl);
+}
+
+.markdown-viewer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+/* Theme variables are now imported from App.css */
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -162,5 +192,14 @@
   
   .features-section {
     grid-template-columns: 1fr;
+  }
+  
+  .home-page {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .markdown-viewer {
+    max-width: 480px;
+    margin: 0 auto;
   }
 }
