@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    {
+      "name": "README.md",
+      "path": "README.md", 
+      "type": "file"
+    },
+    {
+      "name": "docs",
+      "path": "docs",
+      "type": "folder",
+      "children": [
+        {
+          "name": "installation.md",
+          "path": "docs/installation.md",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "examples", 
+      "path": "examples",
+      "type": "folder",
+      "children": [
+        {
+          "name": "basic-usage.md",
+          "path": "examples/basic-usage.md", 
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "name": "api",
+      "path": "api", 
+      "type": "folder",
+      "children": [
+        {
+          "name": "reference.md",
+          "path": "api/reference.md",
+          "type": "file"
+        }
+      ]
+    }
+  ]
+}
