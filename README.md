@@ -21,7 +21,7 @@ A beautiful, responsive markdown viewer that displays files from a specified fol
 
 <!-- Image will be displayed once the smv.png file is committed to the repository -->
 See [the demo](https://alisafari-it.github.io/simple-md-viewer/#/README.md) for a live example!
-![Markdown Explorer Viewer Demo](https://github.com/AliSafari-IT/simple-md-viewer/blob/main/smv.png?raw=true)
+![Markdown Explorer Viewer Demo](https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/refs/heads/main/public/smv.png)
 
 ## 🚀 Quick Start
 
