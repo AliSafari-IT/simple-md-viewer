@@ -20,7 +20,8 @@ A beautiful, responsive markdown viewer that displays files from a specified fol
 ## 📸 Markdown Explorer Viewer Demo
 
 <!-- Image will be displayed once the smv.png file is committed to the repository -->
-![Markdown Explorer Viewer Demo](./public/smv.png)
+See the demo [here](https://alisafari-it.github.io/simple-md-viewer/#/README.md)!
+![Markdown Explorer Viewer Demo](https://github.com/AliSafari-IT/simple-md-viewer/blob/main/smv.png?raw=true)
 
 ## 🚀 Quick Start
 
@@ -40,6 +41,7 @@ pnpm add @asafarim/simple-md-viewer
 ### Basic Setup
 
 1. **Create your project structure:**
+
    ```
    my-docs-project/
    ├── package.json
@@ -53,6 +55,7 @@ pnpm add @asafarim/simple-md-viewer
    ```
 
 2. **Set up the server (server.js):**
+
    ```javascript
    const express = require("express");
    const fs = require("fs");
@@ -136,6 +139,7 @@ pnpm add @asafarim/simple-md-viewer
    ```
 
 3. **Update your package.json:**
+
    ```json
    {
      "name": "my-docs-site",
@@ -155,6 +159,7 @@ pnpm add @asafarim/simple-md-viewer
    ```
 
 4. **Start the application:**
+
    ```bash
    npm start
    ```
@@ -167,7 +172,7 @@ pnpm add @asafarim/simple-md-viewer
 
 Perfect for project documentation with nested folder structure:
 
-```
+```tree
 docs/
 ├── README.md
 ├── getting-started/
@@ -186,6 +191,7 @@ docs/
 ```
 
 **Example markdown content:**
+
 ```markdown
 # Getting Started
 
@@ -211,7 +217,7 @@ const app = new AwesomePackage({
 
 Organize team knowledge and processes:
 
-```
+```tree
 wiki/
 ├── README.md
 ├── onboarding/
@@ -230,7 +236,7 @@ wiki/
 
 Share articles and blog posts:
 
-```
+```tree
 blog/
 ├── README.md
 ├── 2024/
@@ -248,7 +254,7 @@ blog/
 
 Create learning materials and courses:
 
-```
+```tree
 course/
 ├── README.md
 ├── module-1-basics/
@@ -267,7 +273,7 @@ course/
 
 Document project requirements and specifications:
 
-```
+```tree
 specs/
 ├── README.md
 ├── requirements/
@@ -354,11 +360,11 @@ The viewer automatically adapts to different screen sizes:
 
 The viewer supports clean URLs for deep linking:
 
-```
-http://localhost:3501/                    # Homepage (README.md)
-http://localhost:3501/guide.md            # Direct file access
-http://localhost:3501/api/reference.md    # Nested file access
-http://localhost:3501/docs/getting-started.md  # Deep nested access
+```tree
+http://localhost:3501/                    # Homepage (html and md-docs/README.md)
+http://localhost:3501/#/README.md            # Direct file access
+http://localhost:3501/#/docs/api/reference.md    # Nested file access
+http://localhost:3501/#/docs/getting-started.md  # Deep nested access
 ```
 
 ## 🚀 Advanced Usage
@@ -458,7 +464,7 @@ pnpm preview
 
 ### Project Structure
 
-```
+```tree
 simple-md-viewer/
 ├── src/
 │   ├── components/
@@ -508,4 +514,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by [SMV simple-md-viewer](https://github.com/AliSafari-IT/simple-md-viewer)**
 
-*Happy documenting! 📖✨*
+Happy documenting! 📖✨
