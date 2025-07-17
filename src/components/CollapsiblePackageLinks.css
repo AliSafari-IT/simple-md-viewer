@@ -1,0 +1,78 @@
+/* Collapsible Package Links Styling */
+.package-links-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+}
+
+/* Default styling - links are visible on desktop */
+.package-links-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-primary-light);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.dark .package-links-toggle {
+  background: var(--accent-primary-dark);
+}
+
+.toggle-icon {
+  font-weight: bold;
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+/* By default, content is always visible on desktop */
+.collapsible-content {
+  display: block;
+}
+
+/* Mobile styling */
+@media (max-width: 768px) {
+  .package-links-toggle {
+    display: flex;
+  }
+  
+  .collapsible-content {
+    display: none;
+    margin-top: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+  }
+  
+  .dark .collapsible-content {
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-dark);
+  }
+  
+  .collapsible-content.expanded {
+    display: block;
+  }
+  
+  /* Make links display in a row on mobile */
+  .collapsible-content a {
+    display: inline-block;
+    margin-right: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+  .package-links-toggle {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}

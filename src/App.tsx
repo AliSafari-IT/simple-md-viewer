@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
+
+// Create a theme context to share theme across components
+export const ThemeContext = createContext<{
+  theme: "light" | "dark";
+  toggleTheme?: () => void;
+}>({ theme: "light" });
 import MenuIcon from "./components/icons/MenuIcon";
 import CloseIcon from "./components/icons/CloseIcon";
 import {
@@ -11,9 +17,10 @@ import {
 import MarkdownViewer from "./components/MarkdownViewer";
 import FileTree from "./components/FileTree";
 import { FileNode } from "./types";
-import { PackageLinks } from "@asafarim/shared";
+import CollapsiblePackageLinks from "./components/CollapsiblePackageLinks";
 import "./App.css";
 import "./components/ResponsiveSidebar.css";
+import "./components/CollapsiblePackageLinks.css";
 import HomePage from "./components/HomePage";
 
 // Main content component that handles file loading and display
@@ -28,11 +35,7 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    // Get theme from localStorage or default to light
-    const savedTheme = localStorage.getItem("md-viewer-theme");
-    return (savedTheme as "light" | "dark") || "light";
-  });
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   // Fetch file tree on component mount
   useEffect(() => {
@@ -57,11 +60,8 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
     }
   }, []);
 
-  // Save theme to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem("md-viewer-theme", theme);
-    document.body.className = theme;
-  }, [theme]);
+  // Theme is now managed by the context
+  // No need to save to localStorage here as it's handled in the App component
 
   // Handle file path from URL params
   useEffect(() => {
@@ -182,10 +182,6 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
     return null;
   };
 
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -222,7 +218,7 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
         >
           {theme === "light" ? "🌙" : "☀️"}
         </button>
-        <PackageLinks
+        <CollapsiblePackageLinks
           packageName="@asafarim/simple-md-viewer"
           githubPath="simple-md-viewer"
           demoPath="simple-md-viewer"
@@ -319,17 +315,39 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
 
 // Main App component that sets up routing
 const App: React.FC = () => {
-  return (
-    <HashRouter>
-      <Routes>
-        {/* Handle the root path */}
-        <Route path="/" element={<MarkdownContent showHomePage={true} />} />
+  const [appTheme, setAppTheme] = useState<"light" | "dark">(() => {
+    // Get theme from localStorage or default to light
+    const savedTheme = localStorage.getItem("md-viewer-theme");
+    return (savedTheme as "light" | "dark") || "light";
+  });
 
-        {/* Handle any path, including nested paths with slashes */}
-        <Route path="/*" element={<MarkdownContent showHomePage={false} />} />
-        
-      </Routes>
-    </HashRouter>
+  // Toggle theme function
+  const toggleAppTheme = () => {
+    setAppTheme(prevTheme => {
+      const newTheme = prevTheme === "light" ? "dark" : "light";
+      localStorage.setItem("md-viewer-theme", newTheme);
+      document.body.className = newTheme;
+      return newTheme;
+    });
+  };
+
+  // Set initial body class
+  useEffect(() => {
+    document.body.className = appTheme;
+  }, []);
+
+  return (
+    <ThemeContext.Provider value={{ theme: appTheme, toggleTheme: toggleAppTheme }}>
+      <HashRouter>
+        <Routes>
+          {/* Handle the root path */}
+          <Route path="/" element={<MarkdownContent showHomePage={true} />} />
+
+          {/* Handle any path, including nested paths with slashes */}
+          <Route path="/*" element={<MarkdownContent showHomePage={false} />} />
+        </Routes>
+      </HashRouter>
+    </ThemeContext.Provider>
   );
 };
 

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { default as tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism/tomorrow";
+import { default as oneLight } from "react-syntax-highlighter/dist/esm/styles/prism/one-light";
+import { ThemeContext } from '../App';
 
 // Define the props for the MarkdownViewer component
 interface MarkdownViewerProps {
@@ -9,6 +11,13 @@ interface MarkdownViewerProps {
 }
 
 const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
+  // Get current theme from context
+  const { theme } = useContext(ThemeContext);
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
+  
   return (
     <div className="markdown-viewer">
       <ReactMarkdown
@@ -17,7 +26,8 @@ const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
             const match = /language-(\w+)/.exec(className || '');
             return !inline && match ? (
               <SyntaxHighlighter
-                style={tomorrow as any}
+                // Use light theme for light mode, dark theme for dark mode
+                style={(theme === "light" ? oneLight : tomorrow) as any}
                 language={match[1]}
                 PreTag="div"
                 {...props}
