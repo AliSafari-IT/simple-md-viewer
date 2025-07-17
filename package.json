@@ -8,11 +8,9 @@
     "dev": "npx kill-port 3501 && vite",
     "build": "vite build",
     "serve": "npx kill-port 3500 && node server.js --watch",
-    "start": "concurrently \"pnpm run dev\" \"pnpm run serve\"",
-    "predeploy": "pnpm run build",
-    "deploy": "npx gh-pages -d dist"
+    "start": "concurrently \"pnpm run dev\" \"pnpm run serve\""
   },
-  "homepage": "https://alisafari-it.github.io/simple-md-viewer",
+  "homepage": "https://alisafari-it.github.io/simple-md-viewer/#/",
   "repository": {
     "type": "git",
     "url": "https://github.com/alisafari-it/simple-md-viewer.git"

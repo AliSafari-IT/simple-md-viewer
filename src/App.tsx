@@ -302,7 +302,7 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
         <CollapsiblePackageLinks
           packageName="@asafarim/simple-md-viewer"
           githubPath="simple-md-viewer"
-          demoPath="simple-md-viewer"
+          demoPath="https://alisafari-it.github.io/simple-md-viewer/#/"
         />
       </header>
 

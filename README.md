@@ -20,7 +20,8 @@ A beautiful, responsive markdown viewer that displays files from a specified fol
 ## 📸 Markdown Explorer Viewer Demo
 
 <!-- Image will be displayed once the smv.png file is committed to the repository -->
-![Markdown Explorer Viewer Demo](./public/smv.png)
+See [the demo](https://alisafari-it.github.io/simple-md-viewer/#/README.md) for a live example!
+![Markdown Explorer Viewer Demo](https://github.com/AliSafari-IT/simple-md-viewer/blob/main/smv.png?raw=true)
 
 ## 🚀 Quick Start
 
@@ -40,6 +41,7 @@ pnpm add @asafarim/simple-md-viewer
 ### Basic Setup
 
 1. **Create your project structure:**
+
    ```
    my-docs-project/
    ├── package.json
@@ -53,6 +55,7 @@ pnpm add @asafarim/simple-md-viewer
    ```
 
 2. **Set up the server (server.js):**
+
    ```javascript
    const express = require("express");
    const fs = require("fs");
@@ -136,6 +139,7 @@ pnpm add @asafarim/simple-md-viewer
    ```
 
 3. **Update your package.json:**
+
    ```json
    {
      "name": "my-docs-site",
@@ -155,6 +159,7 @@ pnpm add @asafarim/simple-md-viewer
    ```
 
 4. **Start the application:**
+
    ```bash
    npm start
    ```
@@ -186,6 +191,7 @@ docs/
 ```
 
 **Example markdown content:**
+
 ```markdown
 # Getting Started
 
