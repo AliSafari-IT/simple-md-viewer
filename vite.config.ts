@@ -5,8 +5,8 @@ import historyFallback from './vite-history-fallback';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [react(), historyFallback()],
-  // When using HashRouter with GitHub Pages, we need the base path for asset loading
-  base: mode === 'production' ? '/simple-md-viewer/' : '/',
+  // For HashRouter, we don't need the base path in production since the hash handles routing
+  base: '/',
   server: {
     port: 3501,
     strictPort: true,
