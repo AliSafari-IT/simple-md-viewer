@@ -20,7 +20,16 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: 'dist',
-    emptyOutDir: true
+    emptyOutDir: true,
+    // Ensure proper MIME types for GitHub Pages
+    rollupOptions: {
+      output: {
+        // Remove hashes from filenames to avoid MIME type issues
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/chunk-[name].js',
+        assetFileNames: 'assets/[name].[ext]'
+      }
+    }
   },
   // Add this to handle client-side routing in preview mode
   appType: 'spa'

@@ -28,6 +28,10 @@
 </head>
 <body>
   <div id="root"></div>
+  <!-- For development -->
   <script type="module" src="./src/main.tsx"></script>
+  
+  <!-- For GitHub Pages deployment - helps fix MIME type issues -->
+  <script src="./fix-mime.js"></script>
 </body>
 </html>
