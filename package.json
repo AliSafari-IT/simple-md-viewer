@@ -4,6 +4,7 @@
   "description": "A simple markdown viewer that displays files from a specified folder",
   "main": "index.js",
   "scripts": {
+    "rm": "rm -rf node_modules dist assets pnpm-lock.yaml",
     "dev": "npx kill-port 3501 && vite",
     "build": "vite build",
     "serve": "npx kill-port 3500 && node server.js --watch",
