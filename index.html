@@ -25,10 +25,12 @@
       window.location.href = window.location.origin + '/#/' + path + window.location.search;
     })();
   </script>
+  <script type="module" crossorigin src="/simple-md-viewer/assets/index.js"></script>
+  <link rel="stylesheet" href="/simple-md-viewer/assets/index.css">
 </head>
 <body>
   <div id="root"></div>
-  <!-- Use a regular script tag instead of a module for better compatibility -->
-  <script src="./src/main.tsx"></script>
+  <!-- Keep the module type as required by Vite -->
+  
 </body>
 </html>
