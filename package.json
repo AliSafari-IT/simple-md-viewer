@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/simple-md-viewer",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A simple markdown viewer that displays files from a specified folder",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "predeploy": "pnpm run build",
     "deploy": "npx gh-pages -d dist"
   },
-  "homepage": "https://alisafari-it.github.io/simple-md-viewer/#/README.md",
+  "homepage": "https://alisafari-it.github.io/simple-md-viewer/#/",
   "repository": {
     "type": "git",
     "url": "https://github.com/alisafari-it/simple-md-viewer.git"
