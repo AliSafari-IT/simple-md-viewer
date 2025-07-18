@@ -1,12 +1,23 @@
 {
   "name": "@asafarim/simple-md-viewer",
-  "version": "1.2.4",
+  "version": "1.3.0",
   "description": "A simple markdown viewer that displays files from a specified folder",
-  "main": "index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
   "scripts": {
     "rm": "rm -rf node_modules dist assets pnpm-lock.yaml",
     "dev": "npx kill-port 3501 && vite",
-    "build": "vite build",
+    "build": "vite build && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "build:lib": "vite build --mode lib && tsc --project tsconfig.build.json",
     "serve": "npx kill-port 3500 && node server.js --watch",
     "start": "concurrently \"pnpm run dev\" \"pnpm run serve\"",
     "predeploy": "pnpm run build",
@@ -23,7 +34,8 @@
     "dist",
     "md-docs",
     "server.js",
-    "readme.md"
+    "README.md",
+    "LICENSE"
   ],
   "publishConfig": {
     "access": "public"

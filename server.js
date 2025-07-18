@@ -5,8 +5,8 @@ const cors = require("cors");
 
 const app = express();
 let PORT = 3500;
-// Serve static files from the dist/md-docs directory
-const mdDocsPath = path.join(__dirname, "dist", "md-docs");
+// Serve static files from the md-docs directory
+const mdDocsPath = path.join(__dirname, "md-docs");
 app.use("/md-docs", express.static(mdDocsPath));
 
 // Enable CORS for all routes

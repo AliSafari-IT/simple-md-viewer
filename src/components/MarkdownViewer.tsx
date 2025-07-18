@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { default as tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism/tomorrow";
 import { default as oneLight } from "react-syntax-highlighter/dist/esm/styles/prism/one-light";
-import { ThemeContext } from '../App';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 // Define the props for the MarkdownViewer component
 interface MarkdownViewerProps {
