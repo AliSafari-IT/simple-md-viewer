@@ -38,20 +38,41 @@ npm install @asafarim/simple-md-viewer
 The easiest way to get started - includes everything you need:
 
 ```tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
 import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
 import '@asafarim/simple-md-viewer/dist/style.css';
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    // Check localStorage for saved theme preference
+    const savedTheme = localStorage.getItem('smv-theme');
+    return savedTheme || 'light';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      return newTheme;
+    });
+  };
+
+  // Apply theme to document root for global styling
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
-    <ThemeProvider theme="light">
-      <HashRouter>
-        <MarkdownContent 
-          apiBaseUrl="http://localhost:3500" 
-          showHomePage={true}
-        />
-      </HashRouter>
+    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+      <div className={`app ${theme}`}>
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3500" 
+            showHomePage={true}
+          />
+        </HashRouter>
+      </div>
     </ThemeProvider>
   );
 }
@@ -64,7 +85,7 @@ export default App;
 For more control, use individual components:
 
 ```tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   MarkdownViewer, 
   FileTree, 
@@ -74,10 +95,25 @@ import '@asafarim/simple-md-viewer/dist/style.css';
 
 function CustomApp() {
   const [content, setContent] = useState('# Hello World\nYour markdown here...');
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('smv-theme') || 'light';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      return newTheme;
+    });
+  };
+
+  // Apply theme globally
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   return (
-    <ThemeProvider theme={theme} toggleTheme={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
       <div className={`app ${theme}`}>
         <MarkdownViewer content={content} />
       </div>
@@ -354,17 +390,38 @@ export default defineConfig({
 
 ```tsx
 // src/App.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
 import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
 import '@asafarim/simple-md-viewer/dist/style.css';
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('smv-theme') || 'light';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      return newTheme;
+    });
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
-    <ThemeProvider theme="light">
-      <HashRouter>
-        <MarkdownContent />
-      </HashRouter>
+    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+      <div className={`app ${theme}`}>
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3500"
+            showHomePage={true}
+          />
+        </HashRouter>
+      </div>
     </ThemeProvider>
   );
 }
@@ -457,14 +514,38 @@ import { ThemeProvider } from '@asafarim/simple-md-viewer';
 
 function App() {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
+    // Check localStorage and system preference
+    const savedTheme = localStorage.getItem('smv-theme');
+    if (savedTheme) return savedTheme;
+    
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
   });
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+      return newTheme;
+    });
   };
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      if (!localStorage.getItem('smv-theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   return (
     <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
@@ -550,7 +631,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 ## 📞 Support & Links
 
 - 📦 **NPM Package**: [npmjs.com/package/@asafarim/simple-md-viewer](https://www.npmjs.com/package/@asafarim/simple-md-viewer)
-- 🌐 **Live Demo**: [alisafari-it.github.io/simple-md-viewer](https://alisafari-it.github.io/simple-md-viewer/)
+- 🌐 **Live Demo**: [alisafari-it.github.io/simple-md-viewer](https://alisafari-it.github.io/simple-md-viewer/#/)
 - 📂 **GitHub Repository**: [github.com/AliSafari-IT/simple-md-viewer](https://github.com/AliSafari-IT/simple-md-viewer)
 - 🐛 **Issues**: [GitHub Issues](https://github.com/AliSafari-IT/simple-md-viewer/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/AliSafari-IT/simple-md-viewer/discussions)

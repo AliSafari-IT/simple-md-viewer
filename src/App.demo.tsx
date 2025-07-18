@@ -8,24 +8,17 @@ import { useState, useEffect } from 'react';
 /**
  * Demo App for @asafarim/simple-md-viewer v1.3.0
  * 
- * 🚀 Latest Features Showcased:
- * - ✅ Persistent theme preference with localStorage
- * - ✅ Mobile-responsive design with collapsible sidebar
- * - ✅ Homepage feature with showHomePage prop
- * - ✅ Configurable API base URL
- * - ✅ Global theme application to document root
- * - ✅ Package integration with @asafarim/shared
- * - ✅ Modern React 18 with TypeScript
- * - ✅ HashRouter for GitHub Pages compatibility
- * - ✅ Advanced markdown rendering with syntax highlighting
- * - ✅ Accessibility features and keyboard navigation
+ * This showcases the latest features:
+ * - Persistent theme preference with localStorage
+ * - Mobile-responsive design
+ * - Homepage feature
+ * - Configurable API base URL
+ * - Global theme application
+ * - Package integration features
  * 
- * 📦 For production use, users would import like:
+ * For production use, users would import like:
  * import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
  * import '@asafarim/simple-md-viewer/dist/style.css';
- * 
- * 🎯 This demonstrates the complete markdown viewer experience
- * with all the latest v1.3.0 enhancements and mobile optimizations.
  */
 
 function App() {
