@@ -179,8 +179,8 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
         <div className="package-links-wrapper">
           <CollapsiblePackageLinks 
             packageName="@asafarim/simple-md-viewer"
-            githubPath="AliSafari-IT/simple-md-viewer"
-            demoPath="https://alisafari-it.github.io/simple-md-viewer/"
+            githubPath="simple-md-viewer"
+            demoPath="https://alisafari-it.github.io/simple-md-viewer/#/"
           />
         </div>
 
