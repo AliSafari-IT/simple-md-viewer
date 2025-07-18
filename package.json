@@ -35,8 +35,10 @@
     "md-docs",
     "server.js",
     "README.md",
-    "LICENSE"
-  ],
+    "LICENSE",
+    "assets",
+    "smv-logo.svg"
+    ],
   "publishConfig": {
     "access": "public"
   },
