@@ -196,7 +196,7 @@ const MarkdownContent: React.FC<{ showHomePage?: boolean }> = ({
         // Extract the file path from the normalized path
         try {
           const response = await fetch(
-            `https://raw.githubusercontent.com/alisafari-it/simple-md-viewer/main/md-docs/${normalizedPath}`
+            `https://github.com/AliSafari-IT/simple-md-viewer/blob/main/md-docs/${normalizedPath}`
           );
           
           if (response.status === 404) {

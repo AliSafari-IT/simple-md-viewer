@@ -38,21 +38,40 @@ yarn add @asafarim/simple-md-viewer
 pnpm add @asafarim/simple-md-viewer
 ```
 
-### Basic Setup
+### Basic Setup - Display Your Markdown Folder
 
-1. **Create your project structure:**
+The Simple Markdown Viewer package helps you create a beautiful web interface to display any folder containing markdown files. Here's how to set it up:
 
-   ```
-   my-docs-project/
-   ├── package.json
-   ├── server.js
-   ├── md-docs/          # Your markdown files go here
-   │   ├── README.md
-   │   ├── guide.md
-   │   └── api/
-   │       └── reference.md
-   └── dist/             # Built files (generated)
-   ```
+#### Step 1: Prepare Your Markdown Files
+
+Organize your markdown files in a folder structure. The viewer will automatically detect and display all `.md` files:
+
+```
+my-docs-project/
+├── package.json
+├── server.js
+├── src/                # React app files (from this package)
+├── md-docs/            # 📁 YOUR MARKDOWN FILES GO HERE
+│   ├── README.md       # Will be shown as homepage
+│   ├── guide.md        # Individual files
+│   ├── tutorial.md
+│   ├── getting-started/
+│   │   ├── installation.md
+│   │   └── setup.md
+│   ├── api/
+│   │   ├── overview.md
+│   │   └── endpoints/
+│   │       ├── users.md
+│   │       └── posts.md
+│   └── examples/
+│       ├── basic.md
+│       └── advanced.md
+└── dist/               # Built files (generated)
+```
+
+#### Step 2: Create the Server
+
+Create a `server.js` file that serves your markdown folder:
 
 2. **Set up the server (server.js):**
 
@@ -64,28 +83,31 @@ pnpm add @asafarim/simple-md-viewer
 
    const app = express();
    const PORT = 3500;
+   
+   // 📁 Point to YOUR markdown folder
    const mdDocsPath = path.join(__dirname, "md-docs");
 
-   // Serve static files
+   // Serve static files from your markdown folder
    app.use("/md-docs", express.static(mdDocsPath));
 
-   // Enable CORS
+   // Enable CORS for the frontend
    app.use(cors({
      origin: "http://localhost:3501",
      credentials: false
    }));
 
-   // API to get folder structure
+   // 🔍 API to scan and return your folder structure
    app.get("/api/folder-structure", (req, res) => {
      try {
        const folderStructure = getFolderStructure(mdDocsPath);
        res.json({ nodes: folderStructure });
      } catch (error) {
-       res.status(500).json({ error: "Failed to get folder structure" });
+       console.error("Error scanning folder:", error);
+       res.status(500).json({ error: "Failed to scan markdown folder" });
      }
    });
 
-   // API to get file content
+   // 📄 API to serve individual markdown files
    app.get("/api/file", (req, res) => {
      try {
        const filePath = req.query.path;
@@ -94,6 +116,12 @@ pnpm add @asafarim/simple-md-viewer
        }
 
        const fullPath = path.join(mdDocsPath, filePath);
+       
+       // Security check: ensure file is within md-docs folder
+       if (!fullPath.startsWith(mdDocsPath)) {
+         return res.status(403).json({ error: "Access denied" });
+       }
+
        if (!fs.existsSync(fullPath)) {
          return res.status(404).json({ error: "File not found" });
        }
@@ -101,10 +129,12 @@ pnpm add @asafarim/simple-md-viewer
        const content = fs.readFileSync(fullPath, "utf-8");
        res.json({ content, path: filePath });
      } catch (error) {
+       console.error("Error reading file:", error);
        res.status(500).json({ error: "Failed to read file" });
      }
    });
 
+   // 🔧 Function to recursively scan your markdown folder
    function getFolderStructure(dirPath, relativePath = "") {
      const items = fs.readdirSync(dirPath);
      const result = [];
@@ -115,6 +145,7 @@ pnpm add @asafarim/simple-md-viewer
        const itemRelativePath = path.join(relativePath, item).replace(/\\/g, "/");
 
        if (stats.isDirectory()) {
+         // Include folders and scan them recursively
          result.push({
            name: item,
            path: itemRelativePath,
@@ -122,6 +153,7 @@ pnpm add @asafarim/simple-md-viewer
            children: getFolderStructure(itemPath, itemRelativePath),
          });
        } else if (item.endsWith(".md")) {
+         // Include only markdown files
          result.push({
            name: item,
            path: itemRelativePath,
@@ -134,37 +166,441 @@ pnpm add @asafarim/simple-md-viewer
    }
 
    app.listen(PORT, () => {
-     console.log(`Server running at http://localhost:${PORT}`);
+     console.log(`🚀 Server running at http://localhost:${PORT}`);
+     console.log(`📁 Serving markdown files from: ${mdDocsPath}`);
    });
    ```
 
-3. **Update your package.json:**
+#### Step 3: Configure Your Project
+
+Update your `package.json` to include the necessary dependencies and scripts:
 
    ```json
    {
      "name": "my-docs-site",
+     "version": "1.0.0",
+     "description": "My documentation site powered by Simple Markdown Viewer",
      "scripts": {
        "dev": "npx kill-port 3501 && vite",
        "serve": "npx kill-port 3500 && node server.js",
        "start": "concurrently \"npm run dev\" \"npm run serve\"",
-       "build": "vite build"
+       "build": "vite build",
+       "preview": "vite preview"
      },
      "dependencies": {
        "@asafarim/simple-md-viewer": "^1.0.1",
        "concurrently": "^8.2.2",
        "express": "^4.18.2",
        "cors": "^2.8.5"
+     },
+     "devDependencies": {
+       "vite": "^4.4.5"
      }
    }
    ```
 
-4. **Start the application:**
+#### Step 4: Set Up the Frontend
 
-   ```bash
-   npm start
-   ```
+Now you need to create a simple React app that uses the Simple Markdown Viewer package:
 
-   This will start both the frontend (port 3501) and backend (port 3500) servers.
+**Option A: Create a new React project**
+
+```bash
+# Create a new React project with Vite
+npm create vite@latest my-docs-site -- --template react-ts
+cd my-docs-site
+
+# Install the Simple Markdown Viewer package
+npm install @asafarim/simple-md-viewer
+
+# Install additional dependencies
+npm install express cors concurrently
+```
+
+**Option B: Add to existing React project**
+
+```bash
+# In your existing React project
+npm install @asafarim/simple-md-viewer
+```
+
+**Create the main application file:**
+
+Create or update `src/main.tsx`:
+
+```typescript
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+**Create your App component:**
+
+Create or update `src/App.tsx`:
+
+```typescript
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { MarkdownContent } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <MarkdownContent />
+    </BrowserRouter>
+  );
+}
+
+export default App;
+```
+
+**Create a basic `index.html`:**
+
+Ensure your `index.html` (in the `public` folder) has:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Documentation Site</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+```
+
+**Create a `vite.config.ts` file:**
+
+```typescript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3501,
+  },
+});
+```
+
+**Install additional dev dependencies:**
+
+```bash
+npm install --save-dev @vitejs/plugin-react vite typescript @types/react @types/react-dom
+```
+
+#### Step 5: Start Your Documentation Site
+
+```bash
+# Install dependencies
+npm install
+
+# Start both frontend and backend servers
+npm start
+```
+
+This will:
+- 🚀 Start the markdown viewer on `http://localhost:3501`
+- 📡 Start the API server on `http://localhost:3500`
+- 🔍 Automatically scan your `md-docs` folder
+- 🌳 Display an interactive file tree in the sidebar
+- 📖 Render markdown files with syntax highlighting
+
+### 📁 Complete Project Structure
+
+After following the steps above, your project should look like this:
+
+```
+my-docs-site/
+├── package.json                 # Dependencies and scripts
+├── vite.config.ts              # Vite configuration
+├── tsconfig.json               # TypeScript config (auto-generated)
+├── server.js                   # Backend server for API
+├── src/
+│   ├── main.tsx                # React entry point
+│   ├── App.tsx                 # Main App component
+│   └── vite-env.d.ts           # Vite types (auto-generated)
+├── public/
+│   ├── index.html              # HTML template
+│   └── vite.svg                # Favicon
+├── md-docs/                    # 📁 YOUR MARKDOWN FILES
+│   ├── README.md               # Homepage
+│   ├── guide.md
+│   ├── getting-started/
+│   │   └── installation.md
+│   └── api/
+│       └── reference.md
+├── node_modules/               # Dependencies
+└── dist/                       # Built files (after npm run build)
+```
+
+### 🔧 Package Usage Details
+
+When you install `@asafarim/simple-md-viewer`, you get access to these components:
+
+```typescript
+// Available exports from @asafarim/simple-md-viewer
+import { 
+  MarkdownContent,    // Main component that handles everything
+  FileTree,          // Sidebar file tree component
+  MarkdownViewer,    // Markdown renderer component
+  FileNode          // TypeScript types
+} from '@asafarim/simple-md-viewer';
+
+// CSS styles (required)
+import '@asafarim/simple-md-viewer/dist/style.css';
+```
+
+**Most users will only need the `MarkdownContent` component**, which includes:
+- ✅ File tree navigation
+- ✅ Markdown rendering
+- ✅ Theme switching
+- ✅ Responsive design
+- ✅ URL routing
+
+### 🎯 What Happens Next?
+
+1. **Automatic Folder Scanning**: The viewer automatically scans your `md-docs` folder and creates a navigable file tree
+2. **File Tree Navigation**: Click on any file in the sidebar to view its content
+3. **URL-based Navigation**: Each file gets its own URL for easy sharing
+4. **Theme Support**: Users can toggle between light and dark themes
+5. **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+
+### 🔧 Customizing Your Folder Path
+
+You can point the viewer to any folder containing markdown files:
+
+```javascript
+// In server.js, change the folder path
+const mdDocsPath = path.join(__dirname, "my-custom-docs-folder");
+// or use an absolute path
+const mdDocsPath = "/path/to/your/documentation";
+// or use environment variables
+const mdDocsPath = process.env.DOCS_PATH || path.join(__dirname, "md-docs");
+```
+
+### 📁 Supported Folder Structures
+
+The viewer works with any folder structure containing `.md` files:
+
+```
+✅ Simple flat structure:
+docs/
+├── README.md
+├── guide.md
+├── tutorial.md
+└── faq.md
+
+✅ Nested documentation:
+documentation/
+├── README.md
+├── getting-started/
+│   ├── installation.md
+│   └── configuration.md
+├── api/
+│   ├── overview.md
+│   └── endpoints/
+│       ├── users.md
+│       └── posts.md
+└── examples/
+    └── code-samples.md
+
+✅ Project wiki:
+wiki/
+├── README.md
+├── development/
+│   ├── setup.md
+│   └── guidelines.md
+└── deployment/
+    └── production.md
+
+✅ Blog or articles:
+blog/
+├── README.md
+├── 2024/
+│   ├── article-1.md
+│   └── article-2.md
+└── categories/
+    └── technology.md
+```
+
+### ⚡ Quick Examples
+
+#### Example 1: Complete Setup from Scratch
+
+```bash
+# 1. Create a new project
+mkdir my-docs-site
+cd my-docs-site
+
+# 2. Initialize npm project
+npm init -y
+
+# 3. Install the Simple Markdown Viewer package
+npm install @asafarim/simple-md-viewer
+
+# 4. Install additional dependencies
+npm install express cors concurrently
+npm install --save-dev vite @vitejs/plugin-react typescript @types/react @types/react-dom
+
+# 5. Create your markdown folder and files
+mkdir md-docs
+echo "# My Documentation\nWelcome to my docs!" > md-docs/README.md
+echo "# Getting Started\nLet's begin..." > md-docs/getting-started.md
+
+# 6. Create the server.js file (copy from Step 2 above)
+# 7. Create the React app files (copy from Step 4 above)
+# 8. Update package.json scripts (copy from Step 3 above)
+
+# 9. Start your documentation site
+npm start
+```
+
+#### Example 2: Using the Package in Your App
+
+```typescript
+// src/App.tsx - Basic usage
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { MarkdownContent } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <div className="my-app">
+        <header>
+          <h1>My Custom Documentation Site</h1>
+        </header>
+        <main>
+          <MarkdownContent />
+        </main>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+```
+
+#### Example 3: Advanced Usage with Custom Components
+
+```typescript
+// src/App.tsx - Advanced usage with individual components
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { 
+  FileTree, 
+  MarkdownViewer, 
+  FileNode 
+} from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function App() {
+  const [fileTree, setFileTree] = useState<FileNode | null>(null);
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [content, setContent] = useState<string>('');
+
+  // Custom logic for fetching files
+  useEffect(() => {
+    // Fetch your file tree and content
+    // This gives you full control over the data fetching
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <div className="custom-layout">
+        <aside className="sidebar">
+          <h2>My Custom Sidebar</h2>
+          <FileTree 
+            fileTree={fileTree}
+            onFileSelect={setSelectedFile}
+            selectedFile={selectedFile}
+          />
+        </aside>
+        <main className="content">
+          <MarkdownViewer content={content} />
+        </main>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+```
+
+#### Example 4: Display Your Project Documentation
+
+```bash
+# If you have existing markdown files in your project
+cd my-existing-project
+
+# Install the viewer package
+npm install @asafarim/simple-md-viewer express cors concurrently
+
+# Create the server and React setup (follow steps 2-4 above)
+# Point the server to your existing docs folder
+# In server.js, change:
+const mdDocsPath = path.join(__dirname, "docs"); // or wherever your .md files are
+
+# Start the viewer
+npm start
+```
+
+#### Example 5: Display Existing Documentation
+
+If you already have a folder with markdown files:
+
+```bash
+# Point the server to your existing docs
+# In server.js, change the path to your documentation folder:
+const mdDocsPath = path.join(__dirname, "path/to/your/existing/docs");
+
+# Or use environment variable for flexibility
+const mdDocsPath = process.env.DOCS_PATH || path.join(__dirname, "md-docs");
+
+# Then start with custom path
+DOCS_PATH=/path/to/docs npm start
+```
+
+#### Example 6: Multiple Documentation Sets
+
+You can create multiple instances for different documentation sets:
+
+```javascript
+// server.js - serve multiple doc sets
+const express = require("express");
+const app = express();
+
+// Documentation set 1: API docs
+app.use("/api-docs", express.static("./api-documentation"));
+
+// Documentation set 2: User guides  
+app.use("/user-guides", express.static("./user-documentation"));
+
+// Configure different endpoints for each set
+app.get("/api/api-docs/folder-structure", (req, res) => {
+  const folderStructure = getFolderStructure("./api-documentation");
+  res.json({ nodes: folderStructure });
+});
+
+app.get("/api/user-guides/folder-structure", (req, res) => {
+  const folderStructure = getFolderStructure("./user-documentation");
+  res.json({ nodes: folderStructure });
+});
+```
 
 ## 📚 Use Cases & Examples
 
@@ -318,6 +754,83 @@ Override default styles by modifying the CSS custom properties:
 }
 ```
 
+## 🔧 Troubleshooting Common Issues
+
+### Problem: "No files available" in the sidebar
+
+**Solution**: Check your folder structure and server configuration:
+
+```bash
+# Verify your md-docs folder exists and contains .md files
+ls -la md-docs/
+
+# Check server logs for folder scanning errors
+npm run serve
+```
+
+### Problem: "Failed to load file tree" error
+
+**Solutions**:
+1. **Check server is running**: Make sure `http://localhost:3500` is accessible
+2. **Verify CORS settings**: Ensure CORS origin matches your frontend URL
+3. **Check folder permissions**: Ensure the server can read your markdown folder
+
+```javascript
+// Debug: Add logging to see what's happening
+console.log('Scanning folder:', mdDocsPath);
+console.log('Found files:', fs.readdirSync(mdDocsPath));
+```
+
+### Problem: Files not loading or showing 404 errors
+
+**Solutions**:
+1. **Check file paths**: Ensure file paths don't have special characters
+2. **Verify file encoding**: Make sure files are saved as UTF-8
+3. **Check relative paths**: Verify the server is serving files from the correct directory
+
+```javascript
+// Debug: Log file access attempts
+app.get("/api/file", (req, res) => {
+  console.log('Requested file:', req.query.path);
+  console.log('Full path:', path.join(mdDocsPath, req.query.path));
+  // ... rest of the code
+});
+```
+
+### Problem: Styling issues or blank page
+
+**Solutions**:
+1. **Check Vite config**: Ensure your `vite.config.ts` is properly configured
+2. **Verify CSS imports**: Make sure you're importing the styles correctly
+3. **Check browser console**: Look for JavaScript errors
+
+```typescript
+// Make sure you're importing the styles
+import '@asafarim/simple-md-viewer/dist/style.css';
+```
+
+### Problem: Port conflicts
+
+**Solution**: Change the default ports in your configuration:
+
+```json
+{
+  "scripts": {
+    "dev": "npx kill-port 3502 && vite --port 3502",
+    "serve": "npx kill-port 3501 && node server.js",
+    "start": "concurrently \"npm run dev\" \"npm run serve\""
+  }
+}
+```
+
+```javascript
+// In server.js, update CORS origin
+app.use(cors({
+  origin: "http://localhost:3502", // Match your new frontend port
+  credentials: false
+}));
+```
+
 ## 🎨 Theming
 
 The viewer supports both light and dark themes with automatic persistence:
@@ -436,7 +949,114 @@ jobs:
           publish_dir: ./dist
 ```
 
-## 🛠️ Development
+## � Deployment Options
+
+### 1. Local Development Server
+
+Perfect for local documentation viewing:
+
+```bash
+# Start development mode
+npm start
+
+# Access your docs at http://localhost:3501
+```
+
+### 2. Production Server
+
+For hosting your documentation online:
+
+```javascript
+// production-server.js
+const express = require('express');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files (your built React app)
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Serve markdown files
+app.use('/md-docs', express.static(path.join(__dirname, 'md-docs')));
+
+// API routes (same as development)
+// ... include your API routes here
+
+// Handle React Router (for client-side routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Documentation site running on port ${PORT}`);
+});
+```
+
+### 3. Static Site Generation (GitHub Pages)
+
+For static hosting without a backend server:
+
+```bash
+# Build your site
+npm run build
+
+# Deploy the dist folder to any static host
+# (GitHub Pages, Netlify, Vercel, etc.)
+```
+
+### 4. Docker Deployment
+
+Create a `Dockerfile`:
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy source code and markdown files
+COPY . .
+
+# Build the frontend
+RUN npm run build
+
+# Expose port
+EXPOSE 3000
+
+# Start the production server
+CMD ["node", "production-server.js"]
+```
+
+### 5. Integration with Existing Projects
+
+Add documentation to an existing project:
+
+```javascript
+// In your existing Express app
+const express = require('express');
+const app = express();
+
+// Your existing routes
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
+
+// Add documentation routes
+app.use('/docs-static', express.static('./documentation'));
+app.get('/api/docs/folder-structure', (req, res) => {
+  // Handle docs folder structure
+});
+app.get('/api/docs/file', (req, res) => {
+  // Handle docs file serving
+});
+
+// Serve the documentation viewer at /docs
+app.use('/docs', express.static('./dist'));
+```
+
+## �🛠️ Development
 
 ### Local Development Setup
 
