@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/simple-md-viewer",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A simple markdown viewer that displays files from a specified folder",
   "main": "index.js",
   "scripts": {
