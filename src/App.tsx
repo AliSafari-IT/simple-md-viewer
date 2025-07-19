@@ -4,6 +4,7 @@ import MarkdownContent from './components/MarkdownContent';
 import './App.css';
 import './styles.css';
 import { useState, useEffect } from 'react';
+import { defineConfig, loadEnv } from 'vite';
 
 /**
  * Demo App for @asafarim/simple-md-viewer v1.3.0
@@ -36,10 +37,11 @@ function App() {
     return (savedTheme as 'light' | 'dark') || 'light';
   });
 
-  // Get API base URL from environment variables (available at runtime)
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+  // Load environment variables for API base URL
+  const env = loadEnv(process.cwd(), '');
+  const apiBaseUrl = env.API_BASE_URL;
   console.log("API Base URL:", apiBaseUrl);
-  
+
   const toggleTheme = () => {
     setTheme(prevTheme => {
       const newTheme = prevTheme === 'light' ? 'dark' : 'light';
@@ -64,8 +66,10 @@ function App() {
               element={
                 <MarkdownContent 
                   showHomePage={true}
-                  apiBaseUrl={apiBaseUrl || 'http://localhost:3500'}
+                  apiBaseUrl={apiBaseUrl}
                   hideFileTree={false}
+                  hideHeader={false}
+                  hideFooter={false}
                 />
               } 
             />

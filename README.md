@@ -18,6 +18,7 @@ A professional, responsive markdown viewer library for React applications that d
 - ⚡ **High Performance**: Built with React 18, Vite, and optimized for speed
 - 🔗 **Package Integration**: Built-in support for npm package links and GitHub repository links
 - 📐 **Flexible Layout**: Optional file tree hiding for full-width content display
+- 🎛️ **Minimalistic UI Options**: Hide header and footer for clean embedding
 - ♿ **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
 
 ## 🎪 Live Demo
@@ -93,6 +94,7 @@ function App() {
           <MarkdownContent 
             apiBaseUrl="http://localhost:3500" 
             showHomePage={true}
+            hideFileTree={false}
           />
         </HashRouter>
       </div>
@@ -180,6 +182,42 @@ function FullWidthViewer() {
 - 🔧 **Embedded viewers** - Integrate into existing dashboards
 - 📖 **Blog post display** - Clean, distraction-free reading
 - 🎪 **Presentation mode** - Full-screen document viewing
+
+### Option 4: Minimalistic Embedded Viewer
+
+Perfect for embedding in other applications with minimal UI chrome:
+
+```tsx
+import React from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function MinimalViewer() {
+  return (
+    <ThemeProvider theme="light">
+      <div className="embedded-viewer">
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3500" 
+            showHomePage={false}
+            hideFileTree={true}   // 🎯 Hide file tree for clean layout
+            hideHeader={true}     // 🎯 Hide header for minimal chrome
+            hideFooter={true}     // 🎯 Hide footer for clean integration
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+**Perfect for:**
+- 🔗 **API documentation widgets** - Embed docs in admin panels
+- 📱 **Mobile apps** - Ultra-clean content display
+- 🎛️ **Dashboard integration** - Content without competing UI elements
+- 📖 **Help systems** - Context-sensitive documentation
+- 🎯 **Content-only views** - Maximum focus on the markdown content
 
 ## 🏗️ Backend Setup
 
@@ -297,6 +335,8 @@ The main component providing a complete markdown viewer experience.
   apiBaseUrl="http://localhost:3500"
   showHomePage={true}
   hideFileTree={false}
+  hideHeader={false}
+  hideFooter={false}
 />
 ```
 
@@ -304,6 +344,8 @@ The main component providing a complete markdown viewer experience.
 - `apiBaseUrl?` (string): Base URL for API endpoints (default: "http://localhost:3500")
 - `showHomePage?` (boolean): Whether to show homepage when no file is selected (default: true)
 - `hideFileTree?` (boolean): Hide the file tree sidebar and expand content to full width (default: false)
+- `hideHeader?` (boolean): Hide the header section including logo, theme toggle, and menu (default: false)
+- `hideFooter?` (boolean): Hide the footer section for a more minimalistic view (default: false)
 
 #### `ThemeProvider`
 Provides theme context to all child components.
@@ -560,6 +602,27 @@ When you want to display markdown content without file navigation, perfect for:
 - **Mobile-optimized reading**: Maximize content space on small screens
 - **Presentation mode**: Full-width display for presentations or demos
 
+### 7. 🎨 Minimalistic UI (`hideHeader={true}`, `hideFooter={true}`)
+For ultra-clean integration into existing applications:
+
+#### **Embedded Widget Mode**
+```tsx
+<MarkdownContent 
+  showHomePage={false}
+  apiBaseUrl="/api/docs"
+  hideFileTree={true}
+  hideHeader={true}
+  hideFooter={true}
+/>
+```
+- **API documentation widgets**: Clean docs in admin panels
+- **Help system integration**: Context-sensitive help without UI conflicts
+- **Mobile app embedding**: Ultra-minimal chrome for mobile apps
+- **Dashboard content**: Documentation that blends with existing UI
+- **White-label solutions**: Remove branding for third-party integrations
+- **Mobile-optimized reading**: Maximize content space on small screens
+- **Presentation mode**: Full-width display for presentations or demos
+
 #### **Content-First Applications**
 ```tsx
 // Perfect for applications where content is king
@@ -653,6 +716,65 @@ function App() {
     </ThemeProvider>
   );
 }
+```
+
+### 🎛️ Configuration Examples
+
+Here are common configuration patterns for different use cases:
+
+#### **Full-Featured Documentation Site**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3500"
+  showHomePage={true}
+  hideFileTree={false}
+  hideHeader={false}
+  hideFooter={false}
+/>
+```
+
+#### **Mobile-Optimized Content Viewer**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/docs"
+  showHomePage={true}
+  hideFileTree={true}    // Maximize content space
+  hideHeader={false}     // Keep theme toggle and branding
+  hideFooter={true}      // Remove footer for more space
+/>
+```
+
+#### **Embedded Widget (Minimal Chrome)**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/help"
+  showHomePage={false}   // Direct to content
+  hideFileTree={true}    // No navigation needed
+  hideHeader={true}      // Remove all chrome
+  hideFooter={true}      // Ultra-clean integration
+/>
+```
+
+#### **Dashboard Documentation Panel**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/docs"
+  showHomePage={false}
+  hideFileTree={true}    // Clean layout
+  hideHeader={true}      // Integrate with dashboard header
+  hideFooter={false}     // Keep footer for branding
+/>
+```
+
+#### **Blog Post Reader**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/blog"
+  showHomePage={true}
+  hideFileTree={true}    // Focus on content
+  hideHeader={false}     // Keep navigation
+  hideFooter={false}     // Keep branding
+/>
 ```
 
 ## 🚀 Deployment

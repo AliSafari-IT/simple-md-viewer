@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.VITE_PORT || 5174;
-console.log(`Starting SPA server on port ${PORT}`);
+// console.log(`Starting SPA server on port ${PORT}`);
 
 // Enable CORS
 app.use(cors());

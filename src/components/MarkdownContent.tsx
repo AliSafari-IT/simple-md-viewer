@@ -39,7 +39,7 @@ interface MarkdownContentProps {
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({
   showHomePage = true,
-  apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3500",
+  apiBaseUrl = "http://localhost:3500",
   hideFileTree = false,
   hideHeader = false,
   hideFooter = false,

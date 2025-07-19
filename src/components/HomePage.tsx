@@ -34,7 +34,6 @@ const HomePage: React.FC<HomePageProps> = ({ fileTree, findReadmeNode, loading }
   }, [fileTree]);
 
   const fetchFileContent = async (path: string) => {
-
     try {
       // For GitHub Pages deployment, we need to use a different approach
       // since we don't have a backend server there
