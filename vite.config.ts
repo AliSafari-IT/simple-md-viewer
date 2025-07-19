@@ -23,7 +23,27 @@ export default defineConfig(({ mode }) => {
           formats: ['es', 'cjs']
         },
         rollupOptions: {
-          external: ['react', 'react-dom', 'react-router-dom'],
+          external: (id) => {
+            // Don't externalize vite's own modules or rollup's modules
+            if (id.includes('/vite/') || id.includes('/rollup/') || id.includes('__vite-browser-external')) {
+              return false;
+            }
+            
+            // Externalize React dependencies
+            if (['react', 'react-dom', 'react-router-dom'].includes(id)) {
+              return true;
+            }
+            
+            // Externalize Node.js built-in modules
+            const nodeModules = [
+              'fsevents', 'tty', 'util', 'stream', 'path', 'fs', 'os', 'crypto', 
+              'worker_threads', 'child_process', 'events', 'node:fs', 'node:path', 
+              'node:process', 'node:perf_hooks', 'node:crypto', 'node:fs/promises', 
+              'node:url', 'node:os', 'node:module'
+            ];
+            
+            return nodeModules.includes(id);
+          },
           output: {
             globals: {
               react: 'React',
