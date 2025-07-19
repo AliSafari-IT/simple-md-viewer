@@ -85,12 +85,12 @@ Create a basic `index.html` in the root and enable Pages from main branch:
 
 1. Check that the workflow runs without errors
 2. Verify that the `dist` folder is created with your built files
-3. Ensure the GitHub Pages URL is accessible (usually `https://alisafari-it.github.io/simple-md-viewer/`)
+3. Ensure the GitHub Pages URL is accessible (usually `https://alisafari-it.github.io/simple-md-viewer/#/`)
 
 ## Expected Demo URL
 
 Once configured, your demo will be available at:
-`https://alisafari-it.github.io/simple-md-viewer/`
+`https://alisafari-it.github.io/simple-md-viewer/#/`
 
 ## Workflow Features
 
