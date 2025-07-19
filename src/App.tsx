@@ -4,7 +4,7 @@ import MarkdownContent from './components/MarkdownContent';
 import './App.css';
 import './styles.css';
 import { useState, useEffect } from 'react';
-import { defineConfig, loadEnv } from 'vite';
+import { loadEnv } from 'vite';
 
 /**
  * Demo App for @asafarim/simple-md-viewer v1.3.0

@@ -23,27 +23,58 @@ export default defineConfig(({ mode }) => {
           formats: ['es', 'cjs']
         },
         rollupOptions: {
-          external: (id) => {
-            // Don't externalize vite's own modules or rollup's modules
-            if (id.includes('/vite/') || id.includes('/rollup/') || id.includes('__vite-browser-external')) {
-              return false;
-            }
-            
-            // Externalize React dependencies
-            if (['react', 'react-dom', 'react-router-dom'].includes(id)) {
-              return true;
-            }
-            
-            // Externalize Node.js built-in modules
-            const nodeModules = [
-              'fsevents', 'tty', 'util', 'stream', 'path', 'fs', 'os', 'crypto', 
-              'worker_threads', 'child_process', 'events', 'node:fs', 'node:path', 
-              'node:process', 'node:perf_hooks', 'node:crypto', 'node:fs/promises', 
-              'node:url', 'node:os', 'node:module'
-            ];
-            
-            return nodeModules.includes(id);
-          },
+          external: [
+            'react', 
+            'react-dom', 
+            'react-router-dom',
+            // Node.js modules that should not be bundled for browser
+            'fsevents',
+            'tty',
+            'util',
+            'stream',
+            'path',
+            'fs',
+            'os',
+            'crypto',
+            'worker_threads',
+            'child_process',
+            'events',
+            'assert',
+            'net',
+            'url',
+            'http',
+            'https',
+            'zlib',
+            'buffer',
+            'tls',
+            'querystring',
+            'module',
+            'dns',
+            'readline',
+            'http2',
+            // Node.js modules with 'node:' prefix
+            'node:fs',
+            'node:path',
+            'node:process',
+            'node:perf_hooks',
+            'node:crypto',
+            'node:fs/promises',
+            'node:url',
+            'node:os',
+            'node:module',
+            'node:util',
+            'node:child_process',
+            'node:dns',
+            'node:buffer',
+            'node:assert',
+            'node:v8',
+            'node:http',
+            'node:https',
+            'node:zlib',
+            'node:net',
+            'node:readline',
+            'node:http2'
+          ],
           output: {
             globals: {
               react: 'React',
