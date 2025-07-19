@@ -8,6 +8,7 @@ import HomePage from "./HomePage";
 import { ThemeContext } from "../contexts/ThemeContext";
 import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
+import logoSvg from "/smv-logo.svg";
 
 interface MarkdownContentProps {
   showHomePage?: boolean;
@@ -169,7 +170,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
             setSidebarOpen(false);
           }}
         >
-          <img src="https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/530703b84ecd4294a1f72847de70ef802d563378/public/smv-logo.svg" alt="Simple Markdown Viewer Logo" className="logo" />
+          <img src={logoSvg} alt="Simple Markdown Viewer Logo" className="logo" />
           <div>
             <h1 className="title">SMV</h1>
             <p className="subtitle">A simple markdown viewer that displays files from a specified folder</p>
