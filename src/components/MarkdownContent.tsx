@@ -12,14 +12,37 @@ import logoSvg from "/smv-logo.svg";
 
 interface MarkdownContentProps {
   showHomePage?: boolean;
-  apiBaseUrl?: string;
+  /**
+   * Whether to hide the file tree sidebar and expand content to full width.
+   * Useful for mobile or when you want a distraction-free view.
+   * Default is false, showing the file tree.
+   */
   hideFileTree?: boolean;
+  /**
+   * Whether to hide the header section (including the logo and menu).
+   * Useful for a more minimalistic view.
+   * Default is false, showing the header.
+   */
+  hideHeader?: boolean;
+  /**
+   * Base URL for the API endpoints.
+   * Default is "http://localhost:3500".
+   */
+  apiBaseUrl?: string;
+  /**
+   * Whether to hide the footer section.
+   * Useful for a more minimalistic view.
+   * Default is false, showing the footer.
+   */
+  hideFooter?: boolean;
 }
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({
   showHomePage = true,
-  apiBaseUrl = "http://localhost:3500",
-  hideFileTree = false
+  apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3500",
+  hideFileTree = false,
+  hideHeader = false,
+  hideFooter = false,
 }) => {
   const { "*": filePath } = useParams<{ "*": string }>();
   const navigate = useNavigate();
@@ -129,7 +152,9 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
       // Normalize the path by removing any leading slash
       const normalizedPath = path.startsWith("/") ? path.substring(1) : path;
 
-      const response = await fetch(`${apiBaseUrl}/api/file?path=${normalizedPath}`);
+      const response = await fetch(
+        `${apiBaseUrl}/api/file?path=${normalizedPath}`
+      );
       if (!response.ok) {
         throw new Error(`Failed to fetch file: ${response.statusText}`);
       }
@@ -162,56 +187,67 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
 
   return (
     <div className={`app ${theme}`}>
-      <header className="header">
-        <div
-          className="logo-container"
-          onClick={() => {
-            navigate("/");
-            setSelectedFile(null);
-            setMarkdownContent("");
-            setSidebarOpen(false);
-          }}
-        >
-          <img src={logoSvg} alt="Simple Markdown Viewer Logo" className="logo" />
-          <div>
-            <h1 className="title">SMV</h1>
-            <p className="subtitle">A simple markdown viewer that displays files from a specified folder</p>
-          </div>
-        </div>
-
-        <div className="package-links-wrapper">
-          <CollapsiblePackageLinks 
-            packageName="@asafarim/simple-md-viewer"
-            githubPath="simple-md-viewer"
-            demoPath="https://alisafari-it.github.io/simple-md-viewer/#/"
-          />
-        </div>
-
-        <div className="header-controls">
-          <button
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
+      {!hideHeader && (
+        <header className="header">
+          <div
+            className="logo-container"
+            onClick={() => {
+              navigate("/");
+              setSelectedFile(null);
+              setMarkdownContent("");
+              setSidebarOpen(false);
+            }}
           >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
+            <img
+              src={logoSvg}
+              alt="Simple Markdown Viewer Logo"
+              className="logo"
+            />
+            <div>
+              <h1 className="title">SMV</h1>
+              <p className="subtitle">
+                A simple markdown viewer that displays files from a specified
+                folder
+              </p>
+            </div>
+          </div>
 
-          {!hideFileTree && (
+          <div className="package-links-wrapper">
+            <CollapsiblePackageLinks
+              packageName="@asafarim/simple-md-viewer"
+              githubPath="simple-md-viewer"
+              demoPath="https://alisafari-it.github.io/simple-md-viewer/#/"
+            />
+          </div>
+
+          <div className="header-controls">
             <button
-              className="menu-toggle"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label="Toggle menu"
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${
+                theme === "light" ? "dark" : "light"
+              } theme`}
             >
-              {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
+              {theme === "light" ? "🌙" : "☀️"}
             </button>
-          )}
-        </div>
-      </header>
+
+            {!hideFileTree && (
+              <button
+                className="menu-toggle"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                aria-label="Toggle menu"
+              >
+                {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
+              </button>
+            )}
+          </div>
+        </header>
+      )}
 
       <main className={`main ${hideFileTree ? "no-sidebar" : ""}`}>
         {/* Mobile sidebar overlay - only render if not hiding file tree */}
         {!hideFileTree && (
-          <div 
+          <div
             className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
             onClick={() => setSidebarOpen(false)}
           />
@@ -257,9 +293,11 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
         </section>
       </main>
 
-      <footer className="footer">
-        <p>Simple Markdown Viewer - {new Date().getFullYear()}</p>
-      </footer>
+      {!hideFooter && (
+        <footer className="footer">
+          <p>Simple Markdown Viewer - {new Date().getFullYear()}</p>
+        </footer>
+      )}
     </div>
   );
 };

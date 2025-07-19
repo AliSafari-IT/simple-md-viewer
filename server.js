@@ -2,17 +2,21 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
+const { config } = require("dotenv");
+config();// Load environment variables from .env file
 
 const app = express();
-let PORT = 3500;
+let PORT = process.env.PORT;
 // Serve static files from the md-docs directory
-const mdDocsPath = path.join(__dirname, "md-docs");
+const mdDocsPath = path.join(__dirname, "dist",  "md-docs");
 app.use("/md-docs", express.static(mdDocsPath));
 
+const corsOrigin = "http://localhost:"+process.env.VITE_PORT || "http://localhost:3501";
+console.log("CORS Origin:", corsOrigin);
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: ["http://localhost:3501", "https://alisafari-it.github.io"],
+    origin: [corsOrigin, "https://alisafari-it.github.io"],
     credentials: false,
   })
 );

@@ -1,10 +1,16 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import historyFallback from './vite-history-fallback';
 import { resolve } from 'path';
 
-// https://vitejs.dev/config/
+// Vite configuration for the Simple Markdown Viewer package
 export default defineConfig(({ mode }) => {
+  // Load environment variables
+  const env = loadEnv(mode, process.cwd(), '');
+  const VITE_PORT = parseInt(env.VITE_PORT) || 5174;
+  
+  console.log("VITE_PORT nr:", VITE_PORT, "mode:", mode);
+
   if (mode === 'lib') {
     // Library build configuration
     return {
@@ -40,7 +46,7 @@ export default defineConfig(({ mode }) => {
     // For GitHub Pages deployment, we need to set the base to the repository name
     base: mode === 'production' ? '/simple-md-viewer/' : '/',
     server: {
-      port: 3501,
+      port: VITE_PORT,
       strictPort: true,
       // Enable history API fallback for SPA routing
       fs: {
@@ -48,7 +54,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     preview: {
-      port: 3501,
+      port: VITE_PORT,
     },
     build: {
       outDir: 'dist',

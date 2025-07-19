@@ -13,6 +13,7 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ fileTree, findReadmeNode, loading }) => {
   const navigate = useNavigate();
   const [rootReadmeContent, setRootReadmeContent] = React.useState('');
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3500";
 
   const handleExploreClick = () => {
     if (fileTree) {
@@ -33,6 +34,7 @@ const HomePage: React.FC<HomePageProps> = ({ fileTree, findReadmeNode, loading }
   }, [fileTree]);
 
   const fetchFileContent = async (path: string) => {
+
     try {
       // For GitHub Pages deployment, we need to use a different approach
       // since we don't have a backend server there
@@ -48,7 +50,7 @@ const HomePage: React.FC<HomePageProps> = ({ fileTree, findReadmeNode, loading }
       } else {
         // For local development, use the API
         const response = await fetch(
-          `http://localhost:3500/api/file?path=${path}`
+          `${apiBaseUrl}/api/file?path=${path}`
         );
         const data = await response.json();
         setRootReadmeContent(data.content);
