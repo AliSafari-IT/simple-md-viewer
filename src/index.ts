@@ -12,6 +12,5 @@ export type { FileNode } from './types';
 // Export the main App component for demo purposes
 export { default as App } from './App';
 
-// Export styles - users need to import these manually
-import './App.css';
-import './styles.css';
+// Note: Users need to import styles manually:
+// import '@asafarim/simple-md-viewer/dist/style.css';
