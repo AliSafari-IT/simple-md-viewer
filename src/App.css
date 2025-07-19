@@ -520,6 +520,24 @@
   position: relative;
 }
 
+/* No Sidebar Layout - Full Width Content */
+.main.no-sidebar .content {
+  /* Content takes full width when sidebar is hidden */
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  padding: var(--spacing-xl);
+}
+
+/* Hide sidebar completely when hideFileTree is true */
+.main.no-sidebar .sidebar {
+  display: none !important;
+}
+
+.main.no-sidebar .sidebar-overlay {
+  display: none !important;
+}
+
 .content::before {
   content: '';
   position: absolute;

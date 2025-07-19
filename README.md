@@ -17,6 +17,7 @@ A professional, responsive markdown viewer library for React applications that d
 - 🎯 **URL-based Navigation**: Direct linking to specific markdown files with browser history support
 - ⚡ **High Performance**: Built with React 18, Vite, and optimized for speed
 - 🔗 **Package Integration**: Built-in support for npm package links and GitHub repository links
+- 📐 **Flexible Layout**: Optional file tree hiding for full-width content display
 - ♿ **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
 
 ## 🎪 Live Demo
@@ -144,6 +145,42 @@ function CustomApp() {
 }
 ```
 
+### Option 3: Full-Width Content Viewer (No File Tree)
+
+Perfect for embedded documentation, single-document viewing, or mobile-optimized reading:
+
+```tsx
+import React, { useState, useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function FullWidthViewer() {
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <ThemeProvider theme={theme} toggleTheme={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+      <div className="full-width-container">
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3500" 
+            showHomePage={true}
+            hideFileTree={true}  // 🎯 This hides the file tree for full-width content
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+**Perfect for:**
+- 📱 **Mobile-first applications** - Maximum content space
+- 🎯 **Single document focus** - Remove navigation distractions  
+- 🔧 **Embedded viewers** - Integrate into existing dashboards
+- 📖 **Blog post display** - Clean, distraction-free reading
+- 🎪 **Presentation mode** - Full-screen document viewing
+
 ## 🏗️ Backend Setup
 
 Create a simple Express server to serve your markdown files:
@@ -259,12 +296,14 @@ The main component providing a complete markdown viewer experience.
 <MarkdownContent 
   apiBaseUrl="http://localhost:3500"
   showHomePage={true}
+  hideFileTree={false}
 />
 ```
 
 **Props:**
 - `apiBaseUrl?` (string): Base URL for API endpoints (default: "http://localhost:3500")
 - `showHomePage?` (boolean): Whether to show homepage when no file is selected (default: true)
+- `hideFileTree?` (boolean): Hide the file tree sidebar and expand content to full width (default: false)
 
 #### `ThemeProvider`
 Provides theme context to all child components.
@@ -504,6 +543,45 @@ Build course materials, tutorials, and learning resources.
 
 ### 5. 📋 Specification Documents
 Document project requirements, architecture, and technical specifications.
+
+### 6. 🎯 Full-Width Content Display (`hideFileTree={true}`)
+When you want to display markdown content without file navigation, perfect for:
+
+#### **Single Document Viewer**
+```tsx
+<MarkdownContent 
+  showHomePage={false}
+  apiBaseUrl="http://localhost:3500"
+  hideFileTree={true}
+/>
+```
+- **Blog post viewer**: Display a single article without navigation clutter
+- **Embedded documentation**: Integrate into existing dashboards or applications
+- **Mobile-optimized reading**: Maximize content space on small screens
+- **Presentation mode**: Full-width display for presentations or demos
+
+#### **Content-First Applications**
+```tsx
+// Perfect for applications where content is king
+function DocumentReader() {
+  return (
+    <div className="full-screen-reader">
+      <MarkdownContent 
+        showHomePage={true}
+        apiBaseUrl="/api/docs"
+        hideFileTree={true}
+      />
+    </div>
+  );
+}
+```
+
+#### **When to Use `hideFileTree={true}`:**
+- ✅ **Single document focus**: When users should focus on one piece of content
+- ✅ **Embedded viewers**: Integrating into existing applications with their own navigation
+- ✅ **Mobile-first experience**: Maximizing content space on smaller screens
+- ✅ **Clean presentation**: When file tree navigation would be distracting
+- ✅ **Dashboard integration**: Embedding docs into admin panels or dashboards
 
 ## 🔧 Advanced Configuration
 

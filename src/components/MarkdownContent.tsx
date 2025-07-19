@@ -13,11 +13,13 @@ import logoSvg from "/smv-logo.svg";
 interface MarkdownContentProps {
   showHomePage?: boolean;
   apiBaseUrl?: string;
+  hideFileTree?: boolean;
 }
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({
   showHomePage = true,
-  apiBaseUrl = "http://localhost:3500"
+  apiBaseUrl = "http://localhost:3500",
+  hideFileTree = false
 }) => {
   const { "*": filePath } = useParams<{ "*": string }>();
   const navigate = useNavigate();
@@ -194,40 +196,47 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
             {theme === "light" ? "🌙" : "☀️"}
           </button>
 
-          <button
-            className="menu-toggle"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle menu"
-          >
-            {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
+          {!hideFileTree && (
+            <button
+              className="menu-toggle"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Toggle menu"
+            >
+              {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
+          )}
         </div>
       </header>
 
-      <main className="main">
-        {/* Mobile sidebar overlay */}
-        <div 
-          className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
-          onClick={() => setSidebarOpen(false)}
-        />
+      <main className={`main ${hideFileTree ? "no-sidebar" : ""}`}>
+        {/* Mobile sidebar overlay - only render if not hiding file tree */}
+        {!hideFileTree && (
+          <div 
+            className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
-        <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-          <h2>Files</h2>
-          {loading && !fileTree ? (
-            <p>Loading file tree...</p>
-          ) : error && !fileTree ? (
-            <p className="error">{error}</p>
-          ) : (
-            <FileTree
-              fileTree={fileTree}
-              onFileSelect={(path) => {
-                handleFileSelect(path);
-                setSidebarOpen(false); // Close sidebar on mobile after selecting a file
-              }}
-              selectedFile={selectedFile}
-            />
-          )}
-        </aside>
+        {/* Sidebar - only render if not hiding file tree */}
+        {!hideFileTree && (
+          <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+            <h2>Files</h2>
+            {loading && !fileTree ? (
+              <p>Loading file tree...</p>
+            ) : error && !fileTree ? (
+              <p className="error">{error}</p>
+            ) : (
+              <FileTree
+                fileTree={fileTree}
+                onFileSelect={(path) => {
+                  handleFileSelect(path);
+                  setSidebarOpen(false); // Close sidebar on mobile after selecting a file
+                }}
+                selectedFile={selectedFile}
+              />
+            )}
+          </aside>
+        )}
 
         <section className="content">
           {showHomePage && (!filePath || filePath === "") ? (

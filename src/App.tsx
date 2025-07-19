@@ -19,6 +19,7 @@ import { useState, useEffect } from 'react';
  * - ✅ HashRouter for GitHub Pages compatibility
  * - ✅ Advanced markdown rendering with syntax highlighting
  * - ✅ Accessibility features and keyboard navigation
+ * - ✅ Flexible layout with hideFileTree option
  * 
  * 📦 For production use, users would import like:
  * import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
@@ -60,6 +61,7 @@ function App() {
                 <MarkdownContent 
                   showHomePage={true}
                   apiBaseUrl="http://localhost:3500"
+                  hideFileTree={false}
                 />
               } 
             />
