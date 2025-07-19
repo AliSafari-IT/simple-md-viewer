@@ -21,7 +21,7 @@ A professional, responsive markdown viewer library for React applications that d
 
 ## 🎪 Live Demo
 
-Experience the viewer in action: **[Live Demo](https://alisafari-it.github.io/simple-md-viewer/)**
+Experience the viewer in action: **[Live Demo](https://alisafari-it.github.io/simple-md-viewer/#/)**
 
 ![Simple Markdown Viewer Demo](https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/main/public/smv.png)
 
