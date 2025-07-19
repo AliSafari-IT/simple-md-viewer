@@ -4,7 +4,6 @@ import MarkdownContent from './components/MarkdownContent';
 import './App.css';
 import './styles.css';
 import { useState, useEffect } from 'react';
-import { loadEnv } from 'vite';
 
 /**
  * Demo App for @asafarim/simple-md-viewer v1.3.0
@@ -38,8 +37,7 @@ function App() {
   });
 
   // Load environment variables for API base URL
-  const env = loadEnv(process.cwd(), '');
-  const apiBaseUrl = env.API_BASE_URL;
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3500';
   console.log("API Base URL:", apiBaseUrl);
 
   const toggleTheme = () => {

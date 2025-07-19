@@ -1,13 +1,12 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import historyFallback from './vite-history-fallback';
 import { resolve } from 'path';
 
 // Vite configuration for the Simple Markdown Viewer package
 export default defineConfig(({ mode }) => {
   // Load environment variables
   const env = loadEnv(mode, process.cwd(), '');
-  const VITE_PORT = parseInt(env.VITE_PORT) || 5174;
+  const VITE_PORT = parseInt(env.VITE_PORT) || 5173;
   
   console.log("VITE_PORT nr:", VITE_PORT, "mode:", mode);
 
@@ -23,58 +22,24 @@ export default defineConfig(({ mode }) => {
           formats: ['es', 'cjs']
         },
         rollupOptions: {
-          external: [
-            'react', 
-            'react-dom', 
-            'react-router-dom',
-            // Node.js modules that should not be bundled for browser
-            'fsevents',
-            'tty',
-            'util',
-            'stream',
-            'path',
-            'fs',
-            'os',
-            'crypto',
-            'worker_threads',
-            'child_process',
-            'events',
-            'assert',
-            'net',
-            'url',
-            'http',
-            'https',
-            'zlib',
-            'buffer',
-            'tls',
-            'querystring',
-            'module',
-            'dns',
-            'readline',
-            'http2',
-            // Node.js modules with 'node:' prefix
-            'node:fs',
-            'node:path',
-            'node:process',
-            'node:perf_hooks',
-            'node:crypto',
-            'node:fs/promises',
-            'node:url',
-            'node:os',
-            'node:module',
-            'node:util',
-            'node:child_process',
-            'node:dns',
-            'node:buffer',
-            'node:assert',
-            'node:v8',
-            'node:http',
-            'node:https',
-            'node:zlib',
-            'node:net',
-            'node:readline',
-            'node:http2'
-          ],
+          external: (id) => {
+            // Always externalize React dependencies
+            if (['react', 'react-dom', 'react-router-dom'].includes(id)) {
+              return true;
+            }
+            
+            // Externalize all Node.js built-in modules
+            if (id.startsWith('node:') || [
+              'fs', 'path', 'os', 'crypto', 'util', 'stream', 'events', 'assert',
+              'net', 'url', 'http', 'https', 'zlib', 'buffer', 'tls', 'querystring',
+              'module', 'dns', 'readline', 'http2', 'child_process', 'worker_threads',
+              'fsevents', 'tty'
+            ].includes(id)) {
+              return true;
+            }
+            
+            return false;
+          },
           output: {
             globals: {
               react: 'React',
@@ -91,40 +56,45 @@ export default defineConfig(({ mode }) => {
     };
   }
 
-  // Demo build configuration
+  // Default config for development/build
   return {
-    plugins: [react(), historyFallback()],
-    // For GitHub Pages deployment, we need to set the base to the repository name
-    base: mode === 'production' ? '/simple-md-viewer/' : '/',
+    plugins: [react()],
     server: {
       port: VITE_PORT,
-      strictPort: true,
-      // Enable history API fallback for SPA routing
-      fs: {
-        strict: false
-      }
+      host: true
     },
-    preview: {
-      port: VITE_PORT,
+    define: {
+      // Ensure import.meta.env is available
+      'import.meta.env.VITE_API_BASE_URL': JSON.stringify(env.VITE_API_BASE_URL || 'http://localhost:3500'),
+      'import.meta.env.VITE_PORT': JSON.stringify(VITE_PORT.toString())
+    },
+    optimizeDeps: {
+      exclude: [
+        'chokidar',
+        '@rollup/rollup-linux-x64-gnu',
+        '@rollup/rollup-win32-x64-msvc'
+      ],
+      // Force include React dependencies to avoid issues
+      include: ['react', 'react-dom', 'react-router-dom']
+    },
+    resolve: {
+      conditions: ['default', 'module', 'browser', 'development|production'],
+      alias: {
+        'fsevents': resolve(__dirname, 'fsevents-shim.js')
+      }
     },
     build: {
       outDir: 'dist',
-      emptyOutDir: true,
-      // Use a more compatible build configuration for GitHub Pages
-      target: 'es2015',
-      minify: 'terser',
-      cssCodeSplit: false,
+      assetsDir: 'assets',
       rollupOptions: {
-        output: {
-          // Use a format that's more compatible with GitHub Pages
-          format: 'iife',
-          entryFileNames: 'assets/[name].js',
-          chunkFileNames: 'assets/[name]-[hash].js',
-          assetFileNames: 'assets/[name].[ext]'
+        external: (id) => {
+          // Externalize problematic dependencies but not fsevents (we have a shim)
+          if (id === 'chokidar' || id.startsWith('@rollup/rollup-')) {
+            return true;
+          }
+          return false;
         }
       }
-    },
-    // Add this to handle client-side routing in preview mode
-    appType: 'spa'
+    }
   };
 });
