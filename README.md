@@ -31,6 +31,28 @@ Experience the viewer in action: **[Live Demo](https://alisafari-it.github.io/si
 npm install @asafarim/simple-md-viewer
 ```
 
+### Import Styles
+
+The package requires CSS styles to be imported. Choose one of these methods:
+
+```tsx
+// Method 1: Import from dist (recommended)
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+// Method 2: Alternative import path
+import '@asafarim/simple-md-viewer/style.css';
+```
+
+### TypeScript Support
+
+If you encounter TypeScript errors with CSS imports, add this to your project's type declarations:
+
+```typescript
+// In your global.d.ts or vite-env.d.ts
+declare module '@asafarim/simple-md-viewer/dist/style.css';
+declare module '@asafarim/simple-md-viewer/style.css';
+```
+
 ## 🚀 Quick Start
 
 ### Option 1: Complete Markdown Viewer (Recommended)
