@@ -1,6 +1,6 @@
 # @asafarim/simple-md-viewer
 
-A professional, responsive markdown viewer library for React applications that displays markdown files from a specified folder structure with an elegant file tree navigation.
+A professional, responsive markdown viewer library for React applications that displays markdown files from a specified folder structure with an elegant file tree navigation and advanced YAML front matter support.
 
 [![npm version](https://badge.fury.io/js/@asafarim%2Fsimple-md-viewer.svg)](https://www.npmjs.com/package/@asafarim/simple-md-viewer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -11,7 +11,8 @@ A professional, responsive markdown viewer library for React applications that d
 - 🎨 **Modern UI with Theming**: Built-in light/dark themes with glassmorphism effects and smooth animations
 - 📱 **Fully Responsive**: Professional mobile-first design that works perfectly on all devices
 - 🌳 **Interactive File Tree**: Collapsible folder navigation with persistent state and smooth transitions
-- 📖 **Advanced Markdown Rendering**: Complete markdown support with syntax highlighting and custom styling
+- 📖 **Advanced Markdown Rendering**: Complete GitHub Flavored Markdown support with tables, syntax highlighting, and custom styling
+- 📄 **YAML Front Matter Support**: Professional front matter parsing and display with multiple modes and supporting Belgian date formatting
 - 🚀 **Zero Configuration**: Works out of the box with minimal setup required
 - 🔧 **Highly Customizable**: Flexible theming system and component composition
 - 🎯 **URL-based Navigation**: Direct linking to specific markdown files with browser history support
@@ -20,6 +21,40 @@ A professional, responsive markdown viewer library for React applications that d
 - 📐 **Flexible Layout**: Optional file tree hiding for full-width content display
 - 🎛️ **Minimalistic UI Options**: Hide header and footer for clean embedding
 - ♿ **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
+
+## 📄 What's New in v1.4.0
+
+### 🎯 YAML Front Matter Support
+Professional YAML front matter parsing and display with comprehensive metadata support:
+
+- **Multiple Display Modes**: Choose from `full`, `minimal`, `header-only`, or `hidden` display modes
+- **Rich Metadata Support**: Title, description, author, dates, categories, tags, keywords, and more
+- **International Date Formatting**: Built-in support for Belgian date formats (`nl-BE`, `fr-BE`)
+- **Navigation Integration**: Automatic breadcrumbs and related page links from front matter
+- **Professional Styling**: Clean, organized display with theme-aware styling
+- **GitHub Flavored Markdown**: Enhanced table support and complete GFM compatibility
+
+#### Example Front Matter
+```yaml
+---
+title: "API Documentation"
+description: "Complete API reference guide"
+author: "Your Name"
+lastModified: "2025-01-20"
+locale: "nl-BE"  # Belgian Dutch date formatting
+category: "Documentation"
+tags:
+  - api
+  - reference
+breadcrumbs:
+  - name: "Home"
+    path: "/"
+  - name: "API"
+    path: "/api"
+---
+```
+
+This will be beautifully rendered with proper styling, showing formatted dates, organized metadata, and navigation elements.
 
 ## 🎪 Live Demo
 
@@ -362,14 +397,26 @@ Provides theme context to all child components.
 - `children` (ReactNode): Child components
 
 #### `MarkdownViewer`
-Renders markdown content with syntax highlighting.
+Renders markdown content with syntax highlighting and YAML front matter support.
 
 ```tsx
-<MarkdownViewer content="# Hello World\nYour markdown content here..." />
+<MarkdownViewer 
+  content="# Hello World\nYour markdown content here..."
+  showFrontMatter={true}
+  frontMatterMode="full"
+/>
 ```
 
 **Props:**
-- `content` (string): Markdown content to render
+- `content` (string): Markdown content to render (required)
+- `showFrontMatter?` (boolean): Whether to display YAML front matter (default: true)
+- `frontMatterMode?` ('full' | 'minimal' | 'header-only' | 'hidden'): Front matter display mode (default: 'full')
+
+**Front Matter Display Modes:**
+- `'full'`: Shows all front matter metadata in organized sections
+- `'minimal'`: Shows only basic info (author, date, version)
+- `'header-only'`: Shows only title and description
+- `'hidden'`: Hides front matter display entirely
 
 #### `FileTree`
 Interactive file tree navigation component.
@@ -403,6 +450,39 @@ Landing page component showing available documentation.
 - `findReadmeNode` (function): Function to find README file
 - `loading` (boolean): Loading state
 
+#### `FrontMatterDisplay`
+Displays parsed YAML front matter with professional styling.
+
+```tsx
+<FrontMatterDisplay 
+  frontMatter={parsedFrontMatter}
+  mode="full"
+/>
+```
+
+**Props:**
+- `frontMatter` (FrontMatter): Parsed front matter object (required)
+- `mode?` ('full' | 'minimal' | 'header-only'): Display mode (default: 'full')
+
+**Example Usage:**
+```tsx
+import { parseFrontMatter, FrontMatterDisplay } from '@asafarim/simple-md-viewer';
+
+const markdownWithFrontMatter = `---
+title: "My Document"
+author: "John Doe"
+lastModified: "2025-01-20"
+locale: "nl-BE"
+---
+
+# My Content
+`;
+
+const { frontMatter, content } = parseFrontMatter(markdownWithFrontMatter);
+
+<FrontMatterDisplay frontMatter={frontMatter} mode="full" />
+```
+
 ### Types
 
 #### `FileNode`
@@ -420,6 +500,43 @@ interface FileNode {
 interface ThemeContextType {
   theme: 'light' | 'dark';
   toggleTheme?: () => void;
+}
+```
+
+#### `FrontMatter`
+```typescript
+interface FrontMatter {
+  title?: string;
+  description?: string;
+  author?: string;
+  date?: string;
+  lastModified?: string;
+  version?: string;
+  category?: string;
+  section?: string;
+  order?: number;
+  tags?: string[];
+  keywords?: string[];
+  toc?: boolean;
+  sidebar?: boolean;
+  locale?: string; // Date formatting locale (e.g., 'en-US', 'nl-BE', 'fr-BE')
+  breadcrumbs?: Array<{
+    name: string;
+    path: string;
+  }>;
+  related?: Array<{
+    title: string;
+    path: string;
+  }>;
+  [key: string]: any; // Allow additional custom properties
+}
+```
+
+#### `ParsedMarkdown`
+```typescript
+interface ParsedMarkdown {
+  frontMatter: FrontMatter | null;
+  content: string;
 }
 ```
 
@@ -846,7 +963,8 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 ## 🙏 Acknowledgments
 
 - Built with [React](https://reactjs.org/) and [Vite](https://vitejs.dev/)
-- Powered by [react-markdown](https://github.com/remarkjs/react-markdown)
+- Powered by [react-markdown](https://github.com/remarkjs/react-markdown) with [remark-gfm](https://github.com/remarkjs/remark-gfm)
+- YAML parsing by [js-yaml](https://github.com/nodeca/js-yaml)
 - Syntax highlighting by [react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)
 - Package links from [@asafarim/shared](https://www.npmjs.com/package/@asafarim/shared)
 

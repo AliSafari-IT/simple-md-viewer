@@ -1,3 +1,41 @@
+---
+title: "API Overview"
+description: "Comprehensive API documentation for the Markdown Explorer Viewer component with core components, data types, and utility functions"
+category: "API Documentation"
+section: "API"
+order: 1
+tags:
+  - api
+  - components
+  - typescript
+  - documentation
+keywords:
+  - MarkdownExplorer
+  - FileTree
+  - MarkdownViewer
+  - API reference
+  - React components
+author: "Ali Safari"
+lastModified: "2025-07-19"
+version: "1.3.7"
+toc: true
+sidebar: true
+breadcrumbs:
+  - name: "Documentation"
+    path: "/docs"
+  - name: "API"
+    path: "/docs/api"
+  - name: "Overview"
+    path: "/docs/api/overview"
+related:
+  - title: "API Reference"
+    path: "/docs/api/reference.md"
+  - title: "Getting Started"
+    path: "/docs/getting-started.md"
+  - title: "Examples"
+    path: "/docs/examples"
+---
+
 # API Overview
 
 The Markdown Explorer Viewer provides a comprehensive API for customizing and controlling the component behavior.

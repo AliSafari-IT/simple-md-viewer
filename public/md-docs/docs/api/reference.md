@@ -1,3 +1,37 @@
+---
+title: "API Reference"
+description: "Complete reference for all components, props, and utility functions"
+author: "Ali Safari"
+lastModified: "2025-01-20"
+category: "API Documentation"
+section: "API"
+order: 2
+tags:
+  - api
+  - reference
+  - components
+  - typescript
+keywords:
+  - MarkdownExplorer
+  - FileTree
+  - MarkdownViewer
+  - FrontMatterDisplay
+  - API reference
+  - React components
+breadcrumbs:
+  - name: "Documentation"
+    path: "/docs"
+  - name: "API"
+    path: "/docs/api"
+  - name: "Reference"
+    path: "/docs/api/reference"
+related:
+  - title: "API Overview"
+    path: "/docs/api/overview.md"
+  - title: "Getting Started"
+    path: "/docs/getting-started.md"
+---
+
 # API Reference
 
 Complete reference for all components, props, and utility functions.
@@ -12,7 +46,7 @@ The primary component providing the complete markdown exploration experience.
 |------|------|---------|-------------|
 | `fileTree` | `FileNode` | - | **Required.** The root node of the file tree |
 | `rootPath` | `string` | `'/'` | Root path for navigation |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
+| `theme` | `'light'` \| `'dark'` \| `'auto'` | `'auto'` | Color theme |
 | `className` | `string` | `''` | Additional CSS class |
 | `initialRoute` | `string` | - | Initial path to navigate to |
 | `onNavigate` | `(path: string, node: FileNode) => void` | - | Navigation callback |
@@ -64,7 +98,7 @@ Standalone file tree navigation component.
 |------|------|---------|-------------|
 | `fileTree` | `FileNode` | - | **Required.** Root file tree node |
 | `currentPath` | `string` | - | Currently selected path |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | Color theme |
+| `theme` | `'light'` \| `'dark'` \| `'auto'` | `'light'` | Color theme |
 | `onNodeClick` | `(node: FileNode) => void` | - | **Required.** Node click handler |
 | `enableSearch` | `boolean` | `true` | Enable search functionality |
 | `searchPlaceholder` | `string` | `'Search files...'` | Search input placeholder |
@@ -82,10 +116,12 @@ Pure markdown content renderer.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `content` | `string` | - | **Required.** Markdown content |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | Color theme |
+| `theme` | `'light'` \| `'dark'` \| `'auto'` | `'light'` | Color theme |
 | `className` | `string` | `''` | Additional CSS class |
 | `components` | `Record<string, ComponentType>` | - | Custom markdown components |
 | `filePath` | `string` | - | File path for relative links |
+| `showFrontMatter` | `boolean` | `true` | Show YAML front matter display |
+| `frontMatterMode` | `'full'` \| `'minimal'` \| `'header-only'` \| `'hidden'` | `'full'` | Front matter display mode |
 
 ### Custom Components Example
 
@@ -124,9 +160,65 @@ Navigation breadcrumb component.
 |------|------|---------|-------------|
 | `path` | `string` | - | **Required.** Current path |
 | `rootPath` | `string` | `'/'` | Root path |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | Color theme |
+| `theme` | `'light'` \| `'dark'` \| `'auto'` | `'light'` | Color theme |
 | `onPathClick` | `(path: string) => void` | - | **Required.** Path click handler |
 | `className` | `string` | `''` | Additional CSS class |
+
+## FrontMatterDisplay
+
+Component for displaying YAML front matter from markdown files.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `frontMatter` | `FrontMatter` | - | **Required.** Parsed front matter object |
+| `mode` | `'full'` \| `'minimal'` \| `'header-only'` | `'full'` | Display mode |
+
+### Display Modes
+
+- **`full`**: Shows all front matter metadata in organized sections
+- **`minimal`**: Shows only basic info (author, date, version)
+- **`header-only`**: Shows only title and description
+- **`hidden`**: Hides front matter display entirely
+
+### Front Matter Support
+
+The component automatically parses YAML front matter from markdown content and supports:
+
+- **Title & Description**: Page title and description
+- **Metadata**: Author, dates, version, category, section
+- **Navigation**: Breadcrumbs and related pages
+- **Content Organization**: Tags, keywords, TOC settings
+- **Localization**: Custom date formatting with `locale` field
+
+#### Supported Date Locales
+
+- `en-US` - US English (default)
+- `nl-BE` - Belgian Dutch  
+- `fr-BE` - Belgian French
+- `be`, `belgian`, `belgium` - Shortcuts for Belgian Dutch
+
+### Example Front Matter
+
+```yaml
+---
+title: "My Document"
+description: "A comprehensive guide"
+author: "John Doe"
+lastModified: "2025-01-20"
+locale: "nl-BE"
+category: "Documentation"
+tags:
+  - guide
+  - tutorial
+breadcrumbs:
+  - name: "Home"
+    path: "/"
+  - name: "Docs" 
+    path: "/docs"
+---
+```
 
 ## TypeScript Types
 
@@ -140,6 +232,35 @@ interface FileNode {
   content?: string;
   lastModified?: string;
   size?: number;
+}
+```
+
+### FrontMatter
+```typescript
+interface FrontMatter {
+  title?: string;
+  description?: string;
+  author?: string;
+  date?: string;
+  lastModified?: string;
+  version?: string;
+  category?: string;
+  section?: string;
+  order?: number;
+  tags?: string[];
+  keywords?: string[];
+  toc?: boolean;
+  sidebar?: boolean;
+  locale?: string; // Date formatting locale (e.g., 'en-US', 'nl-BE', 'fr-BE')
+  breadcrumbs?: Array<{
+    name: string;
+    path: string;
+  }>;
+  related?: Array<{
+    title: string;
+    path: string;
+  }>;
+  [key: string]: any; // Allow additional custom properties
 }
 ```
 
@@ -180,6 +301,35 @@ Extracts file extension from filename.
 
 ### normalizePath(path: string): string
 Normalizes path format.
+
+### parseFrontMatter(markdown: string): ParsedMarkdown
+Parses YAML front matter from markdown content and returns separated front matter and content.
+
+```typescript
+interface ParsedMarkdown {
+  frontMatter: FrontMatter | null;
+  content: string;
+}
+```
+
+### formatDate(dateString: string, locale?: string): string
+Formats a date string for display with optional locale support.
+
+**Parameters:**
+- `dateString`: ISO date string or other date format
+- `locale`: Locale for formatting (defaults to 'en-US')
+
+**Supported locales:**
+- `'en-US'` - US English (default)
+- `'nl-BE'` - Belgian Dutch
+- `'fr-BE'` - Belgian French  
+- `'be'`, `'belgian'`, `'belgium'` - Shortcuts for Belgian Dutch
+
+**Example:**
+```typescript
+formatDate('2025-01-20', 'nl-BE'); // "20 januari 2025"
+formatDate('2025-01-20', 'fr-BE'); // "20 janvier 2025"
+```
 
 ---
 

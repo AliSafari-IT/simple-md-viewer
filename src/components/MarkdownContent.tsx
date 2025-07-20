@@ -35,14 +35,30 @@ interface MarkdownContentProps {
    * Default is false, showing the footer.
    */
   hideFooter?: boolean;
+  /**
+   * Whether to show YAML front matter in markdown files.
+   * Default is true, showing front matter.
+   */
+  showFrontMatter?: boolean;
+  /**
+   * How to display YAML front matter.
+   * - 'full': Complete metadata display with all fields
+   * - 'minimal': Basic metadata only (author, date, version)
+   * - 'header-only': Just title and description
+   * - 'hidden': Parse but don't display front matter
+   * Default is 'full'.
+   */
+  frontMatterMode?: 'full' | 'minimal' | 'header-only' | 'hidden';
 }
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({
   showHomePage = true,
-  apiBaseUrl = "http://localhost:3500",
+  apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3500",
   hideFileTree = false,
   hideHeader = false,
   hideFooter = false,
+  showFrontMatter = true,
+  frontMatterMode = 'full',
 }) => {
   const { "*": filePath } = useParams<{ "*": string }>();
   const navigate = useNavigate();
@@ -286,7 +302,11 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
           ) : error && !markdownContent ? (
             <p className="error">{error}</p>
           ) : markdownContent ? (
-            <MarkdownViewer content={markdownContent} />
+            <MarkdownViewer 
+              content={markdownContent} 
+              showFrontMatter={showFrontMatter}
+              frontMatterMode={frontMatterMode}
+            />
           ) : (
             <p>Select a file to view its content</p>
           )}

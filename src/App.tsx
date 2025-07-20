@@ -68,6 +68,8 @@ function App() {
                   hideFileTree={false}
                   hideHeader={false}
                   hideFooter={false}
+                  showFrontMatter={true}
+                  frontMatterMode='full'
                 />
               } 
             />
