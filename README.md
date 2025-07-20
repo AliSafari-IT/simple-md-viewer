@@ -254,7 +254,183 @@ function MinimalViewer() {
 - 📖 **Help systems** - Context-sensitive documentation
 - 🎯 **Content-only views** - Maximum focus on the markdown content
 
-## 🏗️ Backend Setup
+## � Front Matter Showcase
+
+Here are comprehensive examples showcasing the advanced YAML front matter capabilities:
+
+### Full-Featured Documentation with Front Matter
+
+```tsx
+import React, { useState, useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, MarkdownViewer, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function DocumentationSite() {
+  const [theme, setTheme] = useState('light');
+  
+  // Complete setup with all front matter features enabled
+  return (
+    <ThemeProvider theme={theme} toggleTheme={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+      <div className={`app ${theme}`}>
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3500"
+            showHomePage={true}
+            hideFileTree={false}
+            hideHeader={false}
+            hideFooter={false}
+            // Front matter is automatically handled by MarkdownViewer inside MarkdownContent
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+### Direct MarkdownViewer with Front Matter Control
+
+```tsx
+import React from 'react';
+import { MarkdownViewer, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function CustomDocumentViewer() {
+  const markdownWithFrontMatter = `---
+title: "Advanced API Documentation"
+description: "Complete guide to our REST API with authentication, rate limiting, and examples"
+author: "Dev Team"
+lastModified: "2025-01-20"
+version: "2.1.0"
+locale: "nl-BE"  # Belgian Dutch formatting
+category: "API Documentation"
+section: "Backend"
+order: 1
+tags:
+  - api
+  - rest
+  - authentication
+  - backend
+keywords: ["API", "REST", "documentation", "guide"]
+toc: true
+sidebar: true
+breadcrumbs:
+  - name: "Home"
+    path: "/"
+  - name: "Documentation" 
+    path: "/docs"
+  - name: "API"
+    path: "/docs/api"
+related:
+  - title: "Authentication Guide"
+    path: "/docs/auth"
+  - title: "Rate Limiting"
+    path: "/docs/rate-limits"
+---
+
+# API Documentation
+
+This is your markdown content with professional front matter display above...
+
+## Authentication
+
+All API requests require authentication...
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET    | /api/users | Get all users |
+| POST   | /api/users | Create user |
+`;
+
+  return (
+    <ThemeProvider theme="light">
+      <div className="custom-viewer">
+        {/* Full front matter display - shows everything */}
+        <MarkdownViewer 
+          content={markdownWithFrontMatter}
+          showFrontMatter={true}
+          frontMatterMode="full"
+        />
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+### Front Matter Display Mode Examples
+
+```tsx
+// Minimal mode - shows only essential info
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={true}
+  frontMatterMode="minimal"  // Shows: author, date, version only
+/>
+
+// Header-only mode - shows title and description
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={true}
+  frontMatterMode="header-only"  // Shows: title, description only
+/>
+
+// Hidden mode - parses but doesn't display front matter
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={false}
+  frontMatterMode="hidden"  // Front matter parsed but not shown
+/>
+
+// Full mode (default) - shows all metadata in organized sections
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={true}
+  frontMatterMode="full"  // Shows: all metadata in sections
+/>
+```
+
+### Belgian Date Formatting Example
+
+```tsx
+const belgianContentNL = `---
+title: "Nederlandse Documentatie"
+author: "Team België"
+date: "2025-01-20"
+lastModified: "2025-01-20T14:30:00Z"
+locale: "nl-BE"  # Belgian Dutch
+category: "Documentatie"
+---
+
+# Welkom bij onze documentatie!
+`;
+
+const belgianContentFR = `---
+title: "Documentation Française"
+author: "Équipe Belge"
+date: "2025-01-20"
+lastModified: "2025-01-20T14:30:00Z"
+locale: "fr-BE"  # Belgian French
+category: "Documentation"
+---
+
+# Bienvenue dans notre documentation!
+`;
+
+// Dates will be formatted according to Belgian conventions
+<MarkdownViewer content={belgianContentNL} showFrontMatter={true} frontMatterMode="full" />
+<MarkdownViewer content={belgianContentFR} showFrontMatter={true} frontMatterMode="full" />
+```
+
+**Front Matter Features Demonstrated:**
+- 🏷️ **Rich Metadata**: Title, description, author, dates, version, categories, tags
+- 🗓️ **Date Formatting**: Automatic Belgian locale support (`nl-BE`, `fr-BE`)
+- 🧭 **Navigation**: Breadcrumbs and related page links
+- 📊 **Organization**: Categories, sections, ordering, and table of contents flags
+- 🎨 **Display Modes**: Four modes from full metadata to hidden
+- 🔍 **SEO Support**: Keywords and structured data for better discoverability
+
+## �🏗️ Backend Setup
 
 Create a simple Express server to serve your markdown files:
 

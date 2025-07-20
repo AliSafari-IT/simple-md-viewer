@@ -69,7 +69,7 @@ function App() {
                   hideHeader={false}
                   hideFooter={false}
                   showFrontMatter={true}
-                  frontMatterMode='full'
+                  frontMatterMode={'full'}
                 />
               } 
             />
