@@ -3,16 +3,19 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const { config } = require("dotenv");
-config();// Load environment variables from .env file
+config(); // Load environment variables from .env file
 
 const app = express();
-let PORT = process.env.PORT;
+let PORT = process.env.PORT || 3301; // Default to 3301 if not set
+
 // Serve static files from the md-docs directory
-const mdDocsPath = path.join(__dirname, "dist",  "md-docs");
+const mdDocsPath = path.join(__dirname, "dist", "md-docs");
 app.use("/md-docs", express.static(mdDocsPath));
 
-const corsOrigin = "http://localhost:"+process.env.VITE_PORT || "http://localhost:3501";
+const corsOrigin =
+  "http://localhost:" + process.env.VITE_PORT || "http://localhost:5174"; // Default to 5174 if VITE_PORT is not set
 console.log("CORS Origin:", corsOrigin);
+
 // Enable CORS for all routes
 app.use(
   cors({

@@ -5,9 +5,9 @@ import {
   MarkdownViewer, 
   ThemeProvider, 
   HomePage 
-} from '@asafarim/simple-md-viewer';
+} from './src';
 
-import { ThemeContext } from '@asafarim/simple-md-viewer';
+import { ThemeContext } from './src/contexts/ThemeContext';
 
 // This file should compile without errors when the package is properly configured
 console.log('TypeScript declarations are working correctly!');

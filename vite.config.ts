@@ -6,7 +6,7 @@ import { resolve } from 'path';
 export default defineConfig(({ mode }) => {
   // Load environment variables
   const env = loadEnv(mode, process.cwd(), '');
-  const VITE_PORT = parseInt(env.VITE_PORT) || 5173;
+  const VITE_PORT = parseInt(env.VITE_PORT) || 5174;
   
   console.log("VITE_PORT nr:", VITE_PORT, "mode:", mode);
 
@@ -59,14 +59,14 @@ export default defineConfig(({ mode }) => {
   // Default config for development/build
   return {
     plugins: [react()],
-    base: env.GITHUB_PAGES === 'true' ? '/simple-md-viewer/' : '/',
+    base: env.GITHUB_PAGES === 'true' ? '/simple-md-viewer/#/' : '#/', // Used hash routing for GitHub Pages
     server: {
       port: VITE_PORT,
       host: true
     },
     define: {
       // Ensure import.meta.env is available
-      'import.meta.env.VITE_API_BASE_URL': JSON.stringify(env.VITE_API_BASE_URL || 'http://localhost:3500'),
+      'import.meta.env.VITE_API_BASE_URL': JSON.stringify(env.VITE_API_BASE_URL || 'http://localhost:3301'),
       'import.meta.env.VITE_PORT': JSON.stringify(VITE_PORT.toString())
     },
     optimizeDeps: {
