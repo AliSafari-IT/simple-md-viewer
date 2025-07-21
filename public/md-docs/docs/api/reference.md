@@ -27,9 +27,9 @@ breadcrumbs:
     path: "/docs/api/reference"
 related:
   - title: "API Overview"
-    path: "/docs/api/overview.md"
+    path: "/simple-md-viewer/#/docs/api/overview.md"
   - title: "Getting Started"
-    path: "/docs/getting-started.md"
+    path: "/simple-md-viewer/#/docs/getting-started.md"
 ---
 
 # API Reference

@@ -29,11 +29,11 @@ breadcrumbs:
     path: "/docs/api/overview"
 related:
   - title: "API Reference"
-    path: "/docs/api/reference.md"
+    path: "/simple-md-viewer/#/docs/api/reference.md"
   - title: "Getting Started"
-    path: "/docs/getting-started.md"
+    path: "/simple-md-viewer/#/docs/getting-started.md"
   - title: "Examples"
-    path: "/docs/examples"
+    path: "/simple-md-viewer/#/docs/examples"
 ---
 
 # API Overview
