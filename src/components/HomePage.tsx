@@ -40,7 +40,7 @@ const HomePage: React.FC<HomePageProps> = ({ fileTree, findReadmeNode, loading }
       if (window.location.hostname === 'alisafari-it.github.io') {
         // For GitHub Pages, try to fetch the README.md directly from the repo
         const response = await fetch(
-          `https://raw.githubusercontent.com/alisafari-it/simple-md-viewer/main/md-docs/README.md`
+          `https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/refs/heads/main/README.md`
         );
         if (response.ok) {
           const content = await response.text();
