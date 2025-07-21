@@ -11,7 +11,9 @@ A professional, responsive markdown viewer library for React applications that d
 - 🎨 **Modern UI with Theming**: Built-in light/dark themes with glassmorphism effects and smooth animations
 - 📱 **Fully Responsive**: Professional mobile-first design that works perfectly on all devices
 - 🌳 **Interactive File Tree**: Collapsible folder navigation with persistent state and smooth transitions
-- 📖 **Advanced Markdown Rendering**: Complete GitHub Flavored Markdown support with tables, syntax highlighting, and custom styling
+- � **Directory Content Browser**: Advanced directory viewing with list, grid, and detailed table views including file sizes
+- 📊 **File Information Display**: Real-time file sizes, modification dates, and comprehensive metadata
+- �📖 **Advanced Markdown Rendering**: Complete GitHub Flavored Markdown support with tables, syntax highlighting, and custom styling
 - 📄 **YAML Front Matter Support**: Professional front matter parsing and display with multiple modes and supporting Belgian date formatting
 - 🚀 **Zero Configuration**: Works out of the box with minimal setup required
 - 🔧 **Highly Customizable**: Flexible theming system and component composition
@@ -21,6 +23,32 @@ A professional, responsive markdown viewer library for React applications that d
 - 📐 **Flexible Layout**: Optional file tree hiding for full-width content display
 - 🎛️ **Minimalistic UI Options**: Hide header and footer for clean embedding
 - ♿ **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
+
+## 📄 What's New in v1.5.0
+
+### 📂 Enhanced Directory Browsing
+Professional directory content viewing with comprehensive file information:
+
+- **Multiple View Styles**: Switch between list, grid, and detailed table views
+- **File Size Display**: Real-time calculation and display of file and folder sizes
+- **Sorting & Filtering**: Sort by name, type, size, or modification date with search filtering
+- **Responsive Design**: Optimized layouts for desktop and mobile devices
+- **Breadcrumb Navigation**: Easy navigation through directory hierarchies
+- **Loading States**: Smooth loading indicators while fetching directory details
+
+![Directory Views](https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/main/public/md-desktop-icon-view.png)
+*Desktop directory view showing grid and detailed table layouts*
+
+![Mobile Directory View](https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/main/public/md-mobile-detail-view.png)
+*Mobile-optimized directory view with touch-friendly interface*
+
+#### Directory View Features:
+- **List View**: Clean, compact file listing with icons
+- **Grid View**: Visual grid layout with larger icons and file types  
+- **Detailed View**: Comprehensive table with file sizes, modification dates, and metadata
+- **Smart Sorting**: Intelligent sorting with folders prioritized over files
+- **Real-time Search**: Instant filtering of directory contents
+- **Size Calculation**: Automatic calculation of folder sizes and file counts
 
 ## 📄 What's New in v1.4.0
 
@@ -422,6 +450,50 @@ category: "Documentation"
 <MarkdownViewer content={belgianContentFR} showFrontMatter={true} frontMatterMode="full" />
 ```
 
+### Directory View Configuration Examples
+
+```tsx
+// Enable directory browsing with detailed view by default
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3300"
+  directoryViewEnabled={true}
+  directoryViewStyle="detailed"  // Shows file sizes, dates, metadata
+  showDirectoryBreadcrumbs={true}
+  enableDirectorySorting={true}
+/>
+
+// Grid view for visual file browsing
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3300"
+  directoryViewStyle="grid"  // Visual grid layout
+  showDirectoryBreadcrumbs={true}
+  enableDirectorySorting={true}
+/>
+
+// Minimal list view without breadcrumbs
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3300"
+  directoryViewStyle="list"  // Clean, compact listing
+  showDirectoryBreadcrumbs={false}
+  enableDirectorySorting={false}
+/>
+
+// Disable directory view entirely (files only)
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3300"
+  directoryViewEnabled={false}  // Directories won't show content
+/>
+```
+
+**Directory View Features Demonstrated:**
+- 📊 **File size calculation**: Real-time size display for files and folders
+- 📅 **Modification dates**: Last modified timestamps with localized formatting  
+- 🔍 **Search and filtering**: Instant search through directory contents
+- 🎯 **Smart sorting**: Sort by name, type, size, or date with folder prioritization
+- 📱 **Responsive layouts**: Touch-friendly mobile interface with optimized views
+- 🧭 **Navigation**: Breadcrumbs and related page links
+```
+
 **Front Matter Features Demonstrated:**
 - 🏷️ **Rich Metadata**: Title, description, author, dates, version, categories, tags
 - 🗓️ **Date Formatting**: Automatic Belgian locale support (`nl-BE`, `fr-BE`)
@@ -463,6 +535,23 @@ app.get('/api/file', (req, res) => {
   }
 });
 
+// API to get directory details with file sizes (NEW in v1.5.0)
+app.get('/api/directory-details', (req, res) => {
+  try {
+    const directoryPath = req.query.path || '';
+    const fullPath = path.join(mdDocsPath, directoryPath);
+    
+    if (!fs.existsSync(fullPath) || !fs.statSync(fullPath).isDirectory()) {
+      return res.status(404).json({ error: 'Directory not found' });
+    }
+
+    const directoryDetails = getDirectoryDetails(fullPath, directoryPath);
+    res.json(directoryDetails);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to read directory details' });
+  }
+});
+
 function getFolderStructure(dirPath, relativePath = '') {
   const items = fs.readdirSync(dirPath);
   const result = [];
@@ -489,6 +578,91 @@ function getFolderStructure(dirPath, relativePath = '') {
   }
 
   return result;
+}
+
+// Helper functions for directory details (NEW in v1.5.0)
+function getDirectoryDetails(dirPath, relativePath = '') {
+  const items = fs.readdirSync(dirPath);
+  const children = [];
+  
+  for (const item of items) {
+    const itemPath = path.join(dirPath, item);
+    const stats = fs.statSync(itemPath);
+    const itemRelativePath = path.join(relativePath, item).replace(/\\/g, '/');
+    
+    if (stats.isDirectory()) {
+      const folderSize = calculateFolderSize(itemPath);
+      const itemCount = countItemsInFolder(itemPath);
+      
+      children.push({
+        name: item,
+        path: itemRelativePath,
+        type: 'folder',
+        size: folderSize,
+        lastModified: stats.mtime.toISOString(),
+        itemCount: itemCount
+      });
+    } else if (item.endsWith('.md')) {
+      children.push({
+        name: item,
+        path: itemRelativePath,
+        type: 'file',
+        size: stats.size,
+        lastModified: stats.mtime.toISOString(),
+        extension: path.extname(item).substring(1)
+      });
+    }
+  }
+  
+  return {
+    name: path.basename(dirPath) || 'root',
+    path: relativePath,
+    type: 'folder',
+    children: children
+  };
+}
+
+function calculateFolderSize(folderPath) {
+  let totalSize = 0;
+  
+  function traverse(currentPath) {
+    const items = fs.readdirSync(currentPath);
+    
+    for (const item of items) {
+      const itemPath = path.join(currentPath, item);
+      const stats = fs.statSync(itemPath);
+      
+      if (stats.isDirectory()) {
+        traverse(itemPath);
+      } else {
+        totalSize += stats.size;
+      }
+    }
+  }
+  
+  traverse(folderPath);
+  return totalSize;
+}
+
+function countItemsInFolder(folderPath) {
+  let count = 0;
+  
+  function traverse(currentPath) {
+    const items = fs.readdirSync(currentPath);
+    count += items.length;
+    
+    for (const item of items) {
+      const itemPath = path.join(currentPath, item);
+      const stats = fs.statSync(itemPath);
+      
+      if (stats.isDirectory()) {
+        traverse(itemPath);
+      }
+    }
+  }
+  
+  traverse(folderPath);
+  return count;
 }
 
 app.listen(PORT, () => {
@@ -548,6 +722,12 @@ The main component providing a complete markdown viewer experience.
   hideFileTree={false}
   hideHeader={false}
   hideFooter={false}
+  showFrontMatter={true}
+  frontMatterMode="full"
+  directoryViewEnabled={true}
+  directoryViewStyle="list"
+  showDirectoryBreadcrumbs={true}
+  enableDirectorySorting={true}
 />
 ```
 
@@ -557,6 +737,12 @@ The main component providing a complete markdown viewer experience.
 - `hideFileTree?` (boolean): Hide the file tree sidebar and expand content to full width (default: false)
 - `hideHeader?` (boolean): Hide the header section including logo, theme toggle, and menu (default: false)
 - `hideFooter?` (boolean): Hide the footer section for a more minimalistic view (default: false)
+- `showFrontMatter?` (boolean): Whether to show YAML front matter in markdown files (default: true)
+- `frontMatterMode?` ('full' | 'minimal' | 'header-only' | 'hidden'): How to display YAML front matter (default: 'full')
+- `directoryViewEnabled?` (boolean): Enable directory content view when folders are selected (default: true)
+- `directoryViewStyle?` ('list' | 'grid' | 'detailed'): Default view style for directory content (default: 'list')
+- `showDirectoryBreadcrumbs?` (boolean): Show breadcrumbs navigation in directory view (default: true)
+- `enableDirectorySorting?` (boolean): Enable sorting and filtering in directory view (default: true)
 
 #### `ThemeProvider`
 Provides theme context to all child components.
@@ -609,6 +795,38 @@ Interactive file tree navigation component.
 - `fileTree` (FileNode | null): File tree data structure
 - `onFileSelect` (function): Callback when a file is selected
 - `selectedFile` (string | null): Currently selected file path
+
+#### `DirectoryView`
+Advanced directory content browser with multiple view styles and file information.
+
+```tsx
+<DirectoryView 
+  directory={directoryNode}
+  onFileSelect={(path) => handleFileSelect(path)}
+  onDirectorySelect={(path) => handleDirectorySelect(path)}
+  viewStyle="detailed"
+  showBreadcrumbs={true}
+  enableSorting={true}
+  enableFiltering={true}
+  loading={false}
+/>
+```
+
+**Props:**
+- `directory` (FileNode): Directory node with children to display (required)
+- `onFileSelect` (function): Callback when a file is selected (required)
+- `onDirectorySelect?` (function): Callback when a directory is selected
+- `viewStyle?` ('list' | 'grid' | 'detailed'): View style for displaying directory contents (default: 'list')
+- `showBreadcrumbs?` (boolean): Show breadcrumb navigation (default: true)
+- `enableSorting?` (boolean): Enable sorting controls (default: true)
+- `enableFiltering?` (boolean): Enable search filtering (default: true)
+- `loading?` (boolean): Show loading state (default: false)
+- `className?` (string): Additional CSS classes
+
+**View Styles:**
+- `'list'`: Compact list view with file icons and names
+- `'grid'`: Grid layout with larger icons and file type labels
+- `'detailed'`: Table view with file sizes, modification dates, and comprehensive metadata
 
 #### `HomePage`
 Landing page component showing available documentation.
