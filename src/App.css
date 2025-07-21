@@ -19,6 +19,7 @@
 
   /* Enhanced color palette */
   --accent-primary-light: #2196f3;
+  --accent-primary-rgb: 33, 150, 243; /* RGB values for rgba() usage */
   --accent-secondary-light: #ff9800;
   --success-light: #4caf50;
   --warning-light: #ff9800;

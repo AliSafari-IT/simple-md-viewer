@@ -78,7 +78,11 @@ const FileTree: React.FC<FileTreeProps> = ({ fileTree, onFileSelect, selectedFil
           <>
             <div 
               className={`folder-node ${isExpanded ? 'expanded' : ''}`}
-              onClick={() => toggleFolder(node.path)}
+              onClick={() => {
+                toggleFolder(node.path);
+                // Also notify parent about folder selection for directory view
+                onFileSelect(node.path);
+              }}
             >
               <span className="folder-icon">{isExpanded ? '📂' : '📁'}</span>
               <span className="folder-name">{node.name}</span>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import MarkdownViewer from "./MarkdownViewer";
 import FileTree from "./FileTree";
+import DirectoryView, { DirectoryViewStyle } from "./DirectoryView";
 import { FileNode } from "../types";
 import CollapsiblePackageLinks from "./CollapsiblePackageLinks";
 import HomePage from "./HomePage";
@@ -49,21 +50,51 @@ interface MarkdownContentProps {
    * Default is 'full'.
    */
   frontMatterMode?: 'full' | 'minimal' | 'header-only' | 'hidden';
+  /**
+   * Enable directory content view when folders are selected.
+   * Shows browsable directory contents with list/grid/detailed views.
+   * Default is true.
+   */
+  directoryViewEnabled?: boolean;
+  /**
+   * Default view style for directory content.
+   * - 'list': Simple list view
+   * - 'grid': Grid layout with larger icons
+   * - 'detailed': Table view with file information
+   * Default is 'list'.
+   */
+  directoryViewStyle?: DirectoryViewStyle;
+  /**
+   * Show breadcrumbs navigation in directory view.
+   * Default is true.
+   */
+  showDirectoryBreadcrumbs?: boolean;
+  /**
+   * Enable sorting and filtering in directory view.
+   * Default is true.
+   */
+  enableDirectorySorting?: boolean;
+  
 }
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({
   showHomePage = true,
-  apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3500",
+  apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3300",
   hideFileTree = false,
   hideHeader = false,
   hideFooter = false,
   showFrontMatter = true,
   frontMatterMode = 'full',
+  directoryViewEnabled = true,
+  directoryViewStyle = 'list',
+  showDirectoryBreadcrumbs = true,
+  enableDirectorySorting = true,
 }) => {
   const { "*": filePath } = useParams<{ "*": string }>();
   const navigate = useNavigate();
   const [fileTree, setFileTree] = useState<FileNode | null>(null);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [selectedDirectory, setSelectedDirectory] = useState<FileNode | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -158,7 +189,36 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
   const handleFileSelect = async (path: string) => {
     try {
       setLoading(true);
+      setError(null);
+      
+      // Find the selected node in the file tree
+      if (fileTree) {
+        const selectedNode = findNodeByPath(fileTree, path);
+        
+        if (selectedNode?.type === 'folder') {
+          // Handle directory selection
+          if (directoryViewEnabled) {
+            setSelectedFile(null);
+            setSelectedDirectory(selectedNode);
+            setMarkdownContent("");
+            
+            // Use React Router navigation
+            if (path !== filePath) {
+              navigate(`/${path}`);
+            }
+            setLoading(false);
+            return;
+          } else {
+            // Directory view disabled, just expand in sidebar
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
+      // Handle file selection (existing logic)
       setSelectedFile(path);
+      setSelectedDirectory(null);
 
       // Use React Router navigation instead of pushState
       if (path !== filePath) {
@@ -182,8 +242,25 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
       console.error("Error fetching markdown content:", error);
       setError("Failed to load markdown content.");
       setMarkdownContent("");
+      setSelectedDirectory(null);
       setLoading(false);
     }
+  };
+
+  // Helper function to find a node (file or directory) by path in the file tree
+  const findNodeByPath = (node: FileNode, targetPath: string): FileNode | null => {
+    if (node.path === targetPath) {
+      return node;
+    }
+
+    if (node.children) {
+      for (const child of node.children) {
+        const found = findNodeByPath(child, targetPath);
+        if (found) return found;
+      }
+    }
+
+    return null;
   };
 
   const findReadmeNode = (node: FileNode): FileNode | null => {
@@ -296,6 +373,22 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
               fileTree={fileTree}
               findReadmeNode={findReadmeNode}
               loading={loading}
+            />
+          ) : selectedDirectory && directoryViewEnabled ? (
+            <DirectoryView
+              directory={selectedDirectory}
+              onFileSelect={(path) => {
+                handleFileSelect(path);
+                setSidebarOpen(false);
+              }}
+              onDirectorySelect={(path) => {
+                handleFileSelect(path);
+                setSidebarOpen(false);
+              }}
+              viewStyle={directoryViewStyle}
+              showBreadcrumbs={showDirectoryBreadcrumbs}
+              enableSorting={enableDirectorySorting}
+              enableFiltering={enableDirectorySorting}
             />
           ) : loading && !markdownContent ? (
             <p>Loading content...</p>
