@@ -59,6 +59,7 @@ export default defineConfig(({ mode }) => {
   // Default config for development/build
   return {
     plugins: [react()],
+    base: env.GITHUB_PAGES === 'true' ? '/simple-md-viewer/' : '/',
     server: {
       port: VITE_PORT,
       host: true

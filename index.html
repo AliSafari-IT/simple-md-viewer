@@ -11,18 +11,27 @@
       // Skip if we're already using a hash URL
       if (window.location.hash) return;
       
-      // Skip for the root path
-      if (window.location.pathname === '/' || window.location.pathname === '/index.html') return;
+      // Get the base path (for GitHub Pages it would be '/simple-md-viewer/')
+      var basePath = document.getElementsByTagName('base')[0]?.getAttribute('href') || '/';
       
-      // Convert the path to a hash URL
+      // Skip for the root path
+      if (window.location.pathname === basePath || 
+          window.location.pathname === basePath + 'index.html' ||
+          window.location.pathname === '/' || 
+          window.location.pathname === '/index.html') return;
+      
+      // Convert the path to a hash URL, removing base path if present
       var path = window.location.pathname;
+      if (basePath !== '/' && path.startsWith(basePath)) {
+        path = path.substring(basePath.length);
+      }
       // Remove leading slash if present
       if (path.startsWith('/')) {
         path = path.substring(1);
       }
       
       // Redirect to the hash URL
-      window.location.href = window.location.origin + '/#/' + path + window.location.search;
+      window.location.href = window.location.origin + basePath + '#/' + path + window.location.search;
     })();
   </script>
 </head>
