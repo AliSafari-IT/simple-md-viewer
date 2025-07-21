@@ -51,7 +51,8 @@ export default defineConfig(({ mode }) => {
         outDir: 'dist',
         emptyOutDir: true,
         cssCodeSplit: false,
-        sourcemap: true
+        sourcemap: true,
+        chunkSizeWarningLimit: 1600 // Increase chunk size warning limit to 1600kB
       }
     };
   }
@@ -87,6 +88,7 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
+      chunkSizeWarningLimit: 1600, // Increase chunk size warning limit to 1600kB
       rollupOptions: {
         external: (id) => {
           // Externalize problematic dependencies but not fsevents (we have a shim)

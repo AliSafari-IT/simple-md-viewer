@@ -127,7 +127,7 @@ function App() {
       <div className={`app ${theme}`}>
         <HashRouter>
           <MarkdownContent 
-            apiBaseUrl="http://localhost:3500" 
+            apiBaseUrl="http://localhost:3300" 
             showHomePage={true}
             hideFileTree={false}
           />
@@ -200,7 +200,7 @@ function FullWidthViewer() {
       <div className="full-width-container">
         <HashRouter>
           <MarkdownContent 
-            apiBaseUrl="http://localhost:3500" 
+            apiBaseUrl="http://localhost:3300" 
             showHomePage={true}
             hideFileTree={true}  // 🎯 This hides the file tree for full-width content
           />
@@ -234,7 +234,7 @@ function MinimalViewer() {
       <div className="embedded-viewer">
         <HashRouter>
           <MarkdownContent 
-            apiBaseUrl="http://localhost:3500" 
+            apiBaseUrl="http://localhost:3300" 
             showHomePage={false}
             hideFileTree={true}   // 🎯 Hide file tree for clean layout
             hideHeader={true}     // 🎯 Hide header for minimal chrome
@@ -275,7 +275,7 @@ function DocumentationSite() {
       <div className={`app ${theme}`}>
         <HashRouter>
           <MarkdownContent 
-            apiBaseUrl="http://localhost:3500"
+            apiBaseUrl="http://localhost:3300"
             showHomePage={true}
             hideFileTree={false}
             hideHeader={false}
@@ -441,10 +441,10 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3500;
+const PORT = 3300;
 const mdDocsPath = path.join(__dirname, 'md-docs'); // Your markdown folder
 
-app.use(cors({ origin: 'http://localhost:3501' }));
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 // API to return folder structure
 app.get('/api/folder-structure', (req, res) => {
@@ -543,7 +543,7 @@ The main component providing a complete markdown viewer experience.
 
 ```tsx
 <MarkdownContent 
-  apiBaseUrl="http://localhost:3500"
+  apiBaseUrl="http://localhost:3300"
   showHomePage={true}
   hideFileTree={false}
   hideHeader={false}
@@ -552,7 +552,7 @@ The main component providing a complete markdown viewer experience.
 ```
 
 **Props:**
-- `apiBaseUrl?` (string): Base URL for API endpoints (default: "http://localhost:3500")
+- `apiBaseUrl?` (string): Base URL for API endpoints (default: "http://localhost:3300")
 - `showHomePage?` (boolean): Whether to show homepage when no file is selected (default: true)
 - `hideFileTree?` (boolean): Hide the file tree sidebar and expand content to full width (default: false)
 - `hideHeader?` (boolean): Hide the header section including logo, theme toggle, and menu (default: false)
@@ -764,7 +764,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3501,
+    port: 5173,
   },
 });
 ```
@@ -813,7 +813,7 @@ function App() {
       <div className={`app ${theme}`}>
         <HashRouter>
           <MarkdownContent 
-            apiBaseUrl="http://localhost:3500"
+            apiBaseUrl="http://localhost:3300"
             showHomePage={true}
           />
         </HashRouter>
@@ -844,7 +844,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 npm start
 ```
 
-Your documentation site will be available at `http://localhost:3501`
+Your documentation site will be available at `http://localhost:5173`
 
 ## 📱 Mobile Responsiveness
 
@@ -886,7 +886,7 @@ When you want to display markdown content without file navigation, perfect for:
 ```tsx
 <MarkdownContent 
   showHomePage={false}
-  apiBaseUrl="http://localhost:3500"
+  apiBaseUrl="http://localhost:3300"
   hideFileTree={true}
 />
 ```
@@ -945,7 +945,7 @@ function DocumentReader() {
 
 ```env
 # .env
-VITE_API_BASE_URL=http://localhost:3500
+VITE_API_BASE_URL=http://localhost:3300
 VITE_DEFAULT_THEME=light
 ```
 
@@ -1018,7 +1018,7 @@ Here are common configuration patterns for different use cases:
 #### **Full-Featured Documentation Site**
 ```tsx
 <MarkdownContent 
-  apiBaseUrl="http://localhost:3500"
+  apiBaseUrl="http://localhost:3300"
   showHomePage={true}
   hideFileTree={false}
   hideHeader={false}
@@ -1098,7 +1098,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-EXPOSE 3501
+EXPOSE 5173
 CMD ["npm", "start"]
 ```
 

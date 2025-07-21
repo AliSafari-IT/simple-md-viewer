@@ -1,399 +1,1092 @@
-# 📖 Simple Markdown Viewer
+# @asafarim/simple-md-viewer
 
-A beautiful, responsive markdown viewer that displays files from a specified folder with an interactive file tree navigation. Perfect for documentation sites, project wikis, and markdown-based content management.
+A professional, responsive markdown viewer library for React applications that displays markdown files from a specified folder structure with an elegant file tree navigation and advanced YAML front matter support.
 
 [![npm version](https://badge.fury.io/js/@asafarim%2Fsimple-md-viewer.svg)](https://www.npmjs.com/package/@asafarim/simple-md-viewer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://alisafari-it.github.io/simple-md-viewer/)
 
 ## ✨ Features
 
-- 🎨 **Dual Theme Support** - Light and dark themes with smooth transitions
-- 📱 **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
-- 🌳 **Interactive File Tree** - Collapsible folder navigation with persistent state
-- 🎯 **URL-based Navigation** - Direct linking to specific markdown files
-- ⚡ **Fast & Lightweight** - Built with React and Vite for optimal performance
-- 🔍 **Syntax Highlighting** - Beautiful code block rendering
-- 🎪 **Modern UI** - Glassmorphism effects, smooth animations, and gradient accents
-- ♿ **Accessible** - Keyboard navigation and screen reader friendly
-- 🔗 **Deep Linking** - Share direct links to specific markdown files
+- 🎨 **Modern UI with Theming**: Built-in light/dark themes with glassmorphism effects and smooth animations
+- 📱 **Fully Responsive**: Professional mobile-first design that works perfectly on all devices
+- 🌳 **Interactive File Tree**: Collapsible folder navigation with persistent state and smooth transitions
+- 📖 **Advanced Markdown Rendering**: Complete GitHub Flavored Markdown support with tables, syntax highlighting, and custom styling
+- 📄 **YAML Front Matter Support**: Professional front matter parsing and display with multiple modes and supporting Belgian date formatting
+- 🚀 **Zero Configuration**: Works out of the box with minimal setup required
+- 🔧 **Highly Customizable**: Flexible theming system and component composition
+- 🎯 **URL-based Navigation**: Direct linking to specific markdown files with browser history support
+- ⚡ **High Performance**: Built with React 18, Vite, and optimized for speed
+- 🔗 **Package Integration**: Built-in support for npm package links and GitHub repository links
+- 📐 **Flexible Layout**: Optional file tree hiding for full-width content display
+- 🎛️ **Minimalistic UI Options**: Hide header and footer for clean embedding
+- ♿ **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
 
-## 📸 Markdown Explorer Viewer Demo
+## 📄 What's New in v1.4.0
 
-<!-- Image will be displayed once the smv.png file is committed to the repository -->
-![Markdown Explorer Viewer Demo](./public/smv.png)
+### 🎯 YAML Front Matter Support
+Professional YAML front matter parsing and display with comprehensive metadata support:
+
+- **Multiple Display Modes**: Choose from `full`, `minimal`, `header-only`, or `hidden` display modes
+- **Rich Metadata Support**: Title, description, author, dates, categories, tags, keywords, and more
+- **International Date Formatting**: Built-in support for Belgian date formats (`nl-BE`, `fr-BE`)
+- **Navigation Integration**: Automatic breadcrumbs and related page links from front matter
+- **Professional Styling**: Clean, organized display with theme-aware styling
+- **GitHub Flavored Markdown**: Enhanced table support and complete GFM compatibility
+
+#### Example Front Matter
+```yaml
+---
+title: "API Documentation"
+description: "Complete API reference guide"
+author: "Your Name"
+lastModified: "2025-01-20"
+locale: "nl-BE"  # Belgian Dutch date formatting
+category: "Documentation"
+tags:
+  - api
+  - reference
+breadcrumbs:
+  - name: "Home"
+    path: "/"
+  - name: "API"
+    path: "/api"
+---
+```
+
+This will be beautifully rendered with proper styling, showing formatted dates, organized metadata, and navigation elements.
+
+## 🎪 Live Demo
+
+Experience the viewer in action: **[Live Demo](https://alisafari-it.github.io/simple-md-viewer/#/)**
+
+![Simple Markdown Viewer Demo](https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/main/public/smv.png)
+
+## 📦 Installation
+
+```bash
+npm install @asafarim/simple-md-viewer
+```
+
+### Import Styles
+
+The package requires CSS styles to be imported. Choose one of these methods:
+
+```tsx
+// Method 1: Import from dist (recommended)
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+// Method 2: Alternative import path
+import '@asafarim/simple-md-viewer/style.css';
+```
+
+### TypeScript Support
+
+If you encounter TypeScript errors with CSS imports, add this to your project's type declarations:
+
+```typescript
+// In your global.d.ts or vite-env.d.ts
+declare module '@asafarim/simple-md-viewer/dist/style.css';
+declare module '@asafarim/simple-md-viewer/style.css';
+```
 
 ## 🚀 Quick Start
 
-### Installation
+### Option 1: Complete Markdown Viewer (Recommended)
 
-```bash
-# Using npm
-npm install @asafarim/simple-md-viewer
+The easiest way to get started - includes everything you need:
 
-# Using yarn
-yarn add @asafarim/simple-md-viewer
+```tsx
+import React, { useState, useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
 
-# Using pnpm
-pnpm add @asafarim/simple-md-viewer
+function App() {
+  const [theme, setTheme] = useState(() => {
+    // Check localStorage for saved theme preference
+    const savedTheme = localStorage.getItem('smv-theme');
+    return savedTheme || 'light';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      return newTheme;
+    });
+  };
+
+  // Apply theme to document root for global styling
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  return (
+    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+      <div className={`app ${theme}`}>
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3300" 
+            showHomePage={true}
+            hideFileTree={false}
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;
 ```
 
-### Basic Setup
+### Option 2: Individual Components
 
-1. **Create your project structure:**
+For more control, use individual components:
 
-   ```tree
-   my-docs-project/
-   ├── package.json
-   ├── server.js
-   ├── md-docs/          # Your markdown files go here
-   │   ├── README.md
-   │   ├── guide.md
-   │   └── api/
-   │       └── reference.md
-   └── dist/             # Built files (generated)
-   ```
+```tsx
+import React, { useState, useEffect } from 'react';
+import { 
+  MarkdownViewer, 
+  FileTree, 
+  ThemeProvider 
+} from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
 
-2. **Set up the server (server.js):**
+function CustomApp() {
+  const [content, setContent] = useState('# Hello World\nYour markdown here...');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('smv-theme') || 'light';
+  });
 
-   ```javascript
-   const express = require("express");
-   const fs = require("fs");
-   const path = require("path");
-   const cors = require("cors");
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      return newTheme;
+    });
+  };
 
-   const app = express();
-   const PORT = 3500;
-   const mdDocsPath = path.join(__dirname, "md-docs");
+  // Apply theme globally
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
-   // Serve static files
-   app.use("/md-docs", express.static(mdDocsPath));
-
-   // Enable CORS
-   app.use(cors({
-     origin: "http://localhost:3501",
-     credentials: false
-   }));
-
-   // API to get folder structure
-   app.get("/api/folder-structure", (req, res) => {
-     try {
-       const folderStructure = getFolderStructure(mdDocsPath);
-       res.json({ nodes: folderStructure });
-     } catch (error) {
-       res.status(500).json({ error: "Failed to get folder structure" });
-     }
-   });
-
-   // API to get file content
-   app.get("/api/file", (req, res) => {
-     try {
-       const filePath = req.query.path;
-       if (!filePath) {
-         return res.status(400).json({ error: "File path is required" });
-       }
-
-       const fullPath = path.join(mdDocsPath, filePath);
-       if (!fs.existsSync(fullPath)) {
-         return res.status(404).json({ error: "File not found" });
-       }
-
-       const content = fs.readFileSync(fullPath, "utf-8");
-       res.json({ content, path: filePath });
-     } catch (error) {
-       res.status(500).json({ error: "Failed to read file" });
-     }
-   });
-
-   function getFolderStructure(dirPath, relativePath = "") {
-     const items = fs.readdirSync(dirPath);
-     const result = [];
-
-     for (const item of items) {
-       const itemPath = path.join(dirPath, item);
-       const stats = fs.statSync(itemPath);
-       const itemRelativePath = path.join(relativePath, item).replace(/\\/g, "/");
-
-       if (stats.isDirectory()) {
-         result.push({
-           name: item,
-           path: itemRelativePath,
-           type: "folder",
-           children: getFolderStructure(itemPath, itemRelativePath),
-         });
-       } else if (item.endsWith(".md")) {
-         result.push({
-           name: item,
-           path: itemRelativePath,
-           type: "file",
-         });
-       }
-     }
-
-     return result;
-   }
-
-   app.listen(PORT, () => {
-     console.log(`Server running at http://localhost:${PORT}`);
-   });
-   ```
-
-3. **Update your package.json:**
-
-   ```json
-   {
-     "name": "my-docs-site",
-     "scripts": {
-       "dev": "npx kill-port 3501 && vite",
-       "serve": "npx kill-port 3500 && node server.js",
-       "start": "concurrently \"npm run dev\" \"npm run serve\"",
-       "build": "vite build"
-     },
-     "dependencies": {
-       "@asafarim/simple-md-viewer": "^1.0.1",
-       "concurrently": "^8.2.2",
-       "express": "^4.18.2",
-       "cors": "^2.8.5"
-     }
-   }
-   ```
-
-4. **Start the application:**
-
-   ```bash
-   npm start
-   ```
-
-   This will start both the frontend (port 3501) and backend (port 3500) servers.
-
-## 📚 Use Cases & Examples
-
-### 1. 📖 **Documentation Site**
-
-Perfect for project documentation with nested folder structure:
-
-```tree
-docs/
-├── README.md
-├── getting-started/
-│   ├── installation.md
-│   ├── configuration.md
-│   └── first-steps.md
-├── api/
-│   ├── overview.md
-│   ├── authentication.md
-│   └── endpoints/
-│       ├── users.md
-│       └── posts.md
-└── examples/
-    ├── basic-usage.md
-    └── advanced-features.md
-```
-
-**Example markdown content:**
-
-```markdown
-# Getting Started
-
-Welcome to our documentation! This guide will help you get up and running quickly.
-
-## Installation
-
-```bash
-npm install awesome-package
-```
-
-## Quick Example
-
-```javascript
-import { AwesomePackage } from 'awesome-package';
-
-const app = new AwesomePackage({
-  apiKey: 'your-api-key'
-});
-```
-
-### 2. 🏢 **Team Wiki**
-
-Organize team knowledge and processes:
-
-```tree
-wiki/
-├── README.md
-├── onboarding/
-│   ├── new-hire-checklist.md
-│   └── company-policies.md
-├── processes/
-│   ├── code-review.md
-│   ├── deployment.md
-│   └── incident-response.md
-└── resources/
-    ├── tools.md
-    └── learning-materials.md
-```
-
-### 3. 📝 **Blog/Articles**
-
-Share articles and blog posts:
-
-```tree
-blog/
-├── README.md
-├── 2024/
-│   ├── 01-january/
-│   │   ├── new-year-resolutions.md
-│   │   └── tech-trends-2024.md
-│   └── 02-february/
-│       └── react-best-practices.md
-└── categories/
-    ├── technology.md
-    └── productivity.md
-```
-
-### 4. 🎓 **Educational Content**
-
-Create learning materials and courses:
-
-```tree
-course/
-├── README.md
-├── module-1-basics/
-│   ├── introduction.md
-│   ├── concepts.md
-│   └── exercises.md
-├── module-2-advanced/
-│   ├── advanced-topics.md
-│   └── projects.md
-└── resources/
-    ├── cheat-sheet.md
-    └── references.md
-```
-
-### 5. 🔧 **Project Specifications**
-
-Document project requirements and specifications:
-
-```tree
-specs/
-├── README.md
-├── requirements/
-│   ├── functional.md
-│   └── non-functional.md
-├── architecture/
-│   ├── system-design.md
-│   └── database-schema.md
-└── testing/
-    ├── test-plan.md
-    └── user-acceptance.md
-```
-
-## ⚙️ Configuration Options
-
-### Environment Variables
-
-Create a `.env` file to customize your setup:
-
-```env
-# Server Configuration
-SERVER_PORT=3500
-CLIENT_PORT=3501
-DOCS_FOLDER=md-docs
-
-# CORS Settings
-CORS_ORIGIN=http://localhost:3501
-
-# Theme Settings
-DEFAULT_THEME=light
-```
-
-### Custom Styling
-
-Override default styles by modifying the CSS custom properties:
-
-```css
-:root {
-  --accent-primary-light: #your-color;
-  --accent-primary-dark: #your-dark-color;
-  --font-family-primary: 'Your-Font', sans-serif;
+  return (
+    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+      <div className={`app ${theme}`}>
+        <MarkdownViewer content={content} />
+      </div>
+    </ThemeProvider>
+  );
 }
 ```
 
-## 🎨 Theming
+### Option 3: Full-Width Content Viewer (No File Tree)
 
-The viewer supports both light and dark themes with automatic persistence:
+Perfect for embedded documentation, single-document viewing, or mobile-optimized reading:
 
-```javascript
-// Theme is automatically saved to localStorage
-// Users can toggle between themes using the theme button
-// Theme preference persists across browser sessions
+```tsx
+import React, { useState, useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function FullWidthViewer() {
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <ThemeProvider theme={theme} toggleTheme={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+      <div className="full-width-container">
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3300" 
+            showHomePage={true}
+            hideFileTree={true}  // 🎯 This hides the file tree for full-width content
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
 ```
 
-### Custom Theme Colors
+**Perfect for:**
+- 📱 **Mobile-first applications** - Maximum content space
+- 🎯 **Single document focus** - Remove navigation distractions  
+- 🔧 **Embedded viewers** - Integrate into existing dashboards
+- 📖 **Blog post display** - Clean, distraction-free reading
+- 🎪 **Presentation mode** - Full-screen document viewing
+
+### Option 4: Minimalistic Embedded Viewer
+
+Perfect for embedding in other applications with minimal UI chrome:
+
+```tsx
+import React from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function MinimalViewer() {
+  return (
+    <ThemeProvider theme="light">
+      <div className="embedded-viewer">
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3300" 
+            showHomePage={false}
+            hideFileTree={true}   // 🎯 Hide file tree for clean layout
+            hideHeader={true}     // 🎯 Hide header for minimal chrome
+            hideFooter={true}     // 🎯 Hide footer for clean integration
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+**Perfect for:**
+- 🔗 **API documentation widgets** - Embed docs in admin panels
+- 📱 **Mobile apps** - Ultra-clean content display
+- 🎛️ **Dashboard integration** - Content without competing UI elements
+- 📖 **Help systems** - Context-sensitive documentation
+- 🎯 **Content-only views** - Maximum focus on the markdown content
+
+## � Front Matter Showcase
+
+Here are comprehensive examples showcasing the advanced YAML front matter capabilities:
+
+### Full-Featured Documentation with Front Matter
+
+```tsx
+import React, { useState, useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, MarkdownViewer, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function DocumentationSite() {
+  const [theme, setTheme] = useState('light');
+  
+  // Complete setup with all front matter features enabled
+  return (
+    <ThemeProvider theme={theme} toggleTheme={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+      <div className={`app ${theme}`}>
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3300"
+            showHomePage={true}
+            hideFileTree={false}
+            hideHeader={false}
+            hideFooter={false}
+            // Front matter is automatically handled by MarkdownViewer inside MarkdownContent
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+### Direct MarkdownViewer with Front Matter Control
+
+```tsx
+import React from 'react';
+import { MarkdownViewer, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function CustomDocumentViewer() {
+  const markdownWithFrontMatter = `---
+title: "Advanced API Documentation"
+description: "Complete guide to our REST API with authentication, rate limiting, and examples"
+author: "Dev Team"
+lastModified: "2025-01-20"
+version: "2.1.0"
+locale: "nl-BE"  # Belgian Dutch formatting
+category: "API Documentation"
+section: "Backend"
+order: 1
+tags:
+  - api
+  - rest
+  - authentication
+  - backend
+keywords: ["API", "REST", "documentation", "guide"]
+toc: true
+sidebar: true
+breadcrumbs:
+  - name: "Home"
+    path: "/"
+  - name: "Documentation" 
+    path: "/docs"
+  - name: "API"
+    path: "/docs/api"
+related:
+  - title: "Authentication Guide"
+    path: "/docs/auth"
+  - title: "Rate Limiting"
+    path: "/docs/rate-limits"
+---
+
+# API Documentation
+
+This is your markdown content with professional front matter display above...
+
+## Authentication
+
+All API requests require authentication...
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET    | /api/users | Get all users |
+| POST   | /api/users | Create user |
+`;
+
+  return (
+    <ThemeProvider theme="light">
+      <div className="custom-viewer">
+        {/* Full front matter display - shows everything */}
+        <MarkdownViewer 
+          content={markdownWithFrontMatter}
+          showFrontMatter={true}
+          frontMatterMode="full"
+        />
+      </div>
+    </ThemeProvider>
+  );
+}
+```
+
+### Front Matter Display Mode Examples
+
+```tsx
+// Minimal mode - shows only essential info
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={true}
+  frontMatterMode="minimal"  // Shows: author, date, version only
+/>
+
+// Header-only mode - shows title and description
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={true}
+  frontMatterMode="header-only"  // Shows: title, description only
+/>
+
+// Hidden mode - parses but doesn't display front matter
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={false}
+  frontMatterMode="hidden"  // Front matter parsed but not shown
+/>
+
+// Full mode (default) - shows all metadata in organized sections
+<MarkdownViewer 
+  content={markdownWithFrontMatter}
+  showFrontMatter={true}
+  frontMatterMode="full"  // Shows: all metadata in sections
+/>
+```
+
+### Belgian Date Formatting Example
+
+```tsx
+const belgianContentNL = `---
+title: "Nederlandse Documentatie"
+author: "Team België"
+date: "2025-01-20"
+lastModified: "2025-01-20T14:30:00Z"
+locale: "nl-BE"  # Belgian Dutch
+category: "Documentatie"
+---
+
+# Welkom bij onze documentatie!
+`;
+
+const belgianContentFR = `---
+title: "Documentation Française"
+author: "Équipe Belge"
+date: "2025-01-20"
+lastModified: "2025-01-20T14:30:00Z"
+locale: "fr-BE"  # Belgian French
+category: "Documentation"
+---
+
+# Bienvenue dans notre documentation!
+`;
+
+// Dates will be formatted according to Belgian conventions
+<MarkdownViewer content={belgianContentNL} showFrontMatter={true} frontMatterMode="full" />
+<MarkdownViewer content={belgianContentFR} showFrontMatter={true} frontMatterMode="full" />
+```
+
+**Front Matter Features Demonstrated:**
+- 🏷️ **Rich Metadata**: Title, description, author, dates, version, categories, tags
+- 🗓️ **Date Formatting**: Automatic Belgian locale support (`nl-BE`, `fr-BE`)
+- 🧭 **Navigation**: Breadcrumbs and related page links
+- 📊 **Organization**: Categories, sections, ordering, and table of contents flags
+- 🎨 **Display Modes**: Four modes from full metadata to hidden
+- 🔍 **SEO Support**: Keywords and structured data for better discoverability
+
+## �🏗️ Backend Setup
+
+Create a simple Express server to serve your markdown files:
+
+```javascript
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const cors = require('cors');
+
+const app = express();
+const PORT = 3300;
+const mdDocsPath = path.join(__dirname, 'md-docs'); // Your markdown folder
+
+app.use(cors({ origin: 'http://localhost:5173' }));
+
+// API to return folder structure
+app.get('/api/folder-structure', (req, res) => {
+  const folderStructure = getFolderStructure(mdDocsPath);
+  res.json({ nodes: folderStructure });
+});
+
+// API to serve markdown files
+app.get('/api/file', (req, res) => {
+  const filePath = path.join(mdDocsPath, req.query.path);
+  if (fs.existsSync(filePath)) {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    res.json({ content });
+  } else {
+    res.status(404).json({ error: 'File not found' });
+  }
+});
+
+function getFolderStructure(dirPath, relativePath = '') {
+  const items = fs.readdirSync(dirPath);
+  const result = [];
+
+  for (const item of items) {
+    const itemPath = path.join(dirPath, item);
+    const stats = fs.statSync(itemPath);
+    const itemRelativePath = path.join(relativePath, item).replace(/\\/g, '/');
+
+    if (stats.isDirectory()) {
+      result.push({
+        name: item,
+        path: itemRelativePath,
+        type: 'folder',
+        children: getFolderStructure(itemPath, itemRelativePath)
+      });
+    } else if (item.endsWith('.md')) {
+      result.push({
+        name: item,
+        path: itemRelativePath,
+        type: 'file'
+      });
+    }
+  }
+
+  return result;
+}
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
+```
+
+## 🎨 Styling & Theming
+
+### Import Required Styles
+
+```tsx
+import '@asafarim/simple-md-viewer/dist/style.css';
+```
+
+### Theme Customization
+
+Override CSS custom properties to customize the appearance:
 
 ```css
-/* Light theme customization */
 :root {
+  /* Light theme colors */
   --bg-color-light: #ffffff;
   --text-color-light: #333333;
   --accent-primary-light: #2196f3;
   --header-bg-light: #f8f9fa;
-}
-
-/* Dark theme customization */
-:root {
+  
+  /* Dark theme colors */
   --bg-color-dark: #1e1e1e;
   --text-color-dark: #e0e0e0;
   --accent-primary-dark: #64b5f6;
   --header-bg-dark: #252526;
+  
+  /* Typography */
+  --font-family-primary: 'Inter', -apple-system, sans-serif;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
 }
 ```
 
-## 📱 Responsive Design
+## 📚 API Reference
 
-The viewer automatically adapts to different screen sizes:
+### Components
 
-- **Desktop (1024px+)**: Full sidebar and content layout
-- **Tablet (768px-1024px)**: Compressed sidebar
-- **Mobile (<768px)**: Collapsible sidebar that becomes a top panel
+#### `MarkdownContent`
+The main component providing a complete markdown viewer experience.
 
-## 🔗 URL Structure
-
-The viewer supports clean URLs for deep linking:
-
-```link
-http://localhost:3501/                    # Homepage (README.md)
-http://localhost:3501/guide.md            # Direct file access
-http://localhost:3501/api/reference.md    # Nested file access
-http://localhost:3501/docs/getting-started.md  # Deep nested access
+```tsx
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3300"
+  showHomePage={true}
+  hideFileTree={false}
+  hideHeader={false}
+  hideFooter={false}
+/>
 ```
 
-## 🚀 Advanced Usage
+**Props:**
+- `apiBaseUrl?` (string): Base URL for API endpoints (default: "http://localhost:3300")
+- `showHomePage?` (boolean): Whether to show homepage when no file is selected (default: true)
+- `hideFileTree?` (boolean): Hide the file tree sidebar and expand content to full width (default: false)
+- `hideHeader?` (boolean): Hide the header section including logo, theme toggle, and menu (default: false)
+- `hideFooter?` (boolean): Hide the footer section for a more minimalistic view (default: false)
 
-### Custom Server Setup
+#### `ThemeProvider`
+Provides theme context to all child components.
 
-For production deployment:
+```tsx
+<ThemeProvider theme="light" toggleTheme={() => setTheme('dark')}>
+  {children}
+</ThemeProvider>
+```
 
-```javascript
-const express = require('express');
-const path = require('path');
+**Props:**
+- `theme` ("light" | "dark"): Current theme
+- `toggleTheme?` (function): Optional theme toggle function
+- `children` (ReactNode): Child components
 
-const app = express();
-const PORT = process.env.PORT || 3500;
+#### `MarkdownViewer`
+Renders markdown content with syntax highlighting and YAML front matter support.
 
-// Serve built React app
-app.use(express.static(path.join(__dirname, 'dist')));
+```tsx
+<MarkdownViewer 
+  content="# Hello World\nYour markdown content here..."
+  showFrontMatter={true}
+  frontMatterMode="full"
+/>
+```
 
-// API routes
-app.use('/api', require('./routes/api'));
+**Props:**
+- `content` (string): Markdown content to render (required)
+- `showFrontMatter?` (boolean): Whether to display YAML front matter (default: true)
+- `frontMatterMode?` ('full' | 'minimal' | 'header-only' | 'hidden'): Front matter display mode (default: 'full')
 
-// Handle React Router
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+**Front Matter Display Modes:**
+- `'full'`: Shows all front matter metadata in organized sections
+- `'minimal'`: Shows only basic info (author, date, version)
+- `'header-only'`: Shows only title and description
+- `'hidden'`: Hides front matter display entirely
+
+#### `FileTree`
+Interactive file tree navigation component.
+
+```tsx
+<FileTree 
+  fileTree={fileTreeData}
+  onFileSelect={(path) => handleFileSelect(path)}
+  selectedFile="/current/file.md"
+/>
+```
+
+**Props:**
+- `fileTree` (FileNode | null): File tree data structure
+- `onFileSelect` (function): Callback when a file is selected
+- `selectedFile` (string | null): Currently selected file path
+
+#### `HomePage`
+Landing page component showing available documentation.
+
+```tsx
+<HomePage 
+  fileTree={fileTreeData}
+  findReadmeNode={findReadmeFunction}
+  loading={false}
+/>
+```
+
+**Props:**
+- `fileTree` (FileNode | null): File tree data
+- `findReadmeNode` (function): Function to find README file
+- `loading` (boolean): Loading state
+
+#### `FrontMatterDisplay`
+Displays parsed YAML front matter with professional styling.
+
+```tsx
+<FrontMatterDisplay 
+  frontMatter={parsedFrontMatter}
+  mode="full"
+/>
+```
+
+**Props:**
+- `frontMatter` (FrontMatter): Parsed front matter object (required)
+- `mode?` ('full' | 'minimal' | 'header-only'): Display mode (default: 'full')
+
+**Example Usage:**
+```tsx
+import { parseFrontMatter, FrontMatterDisplay } from '@asafarim/simple-md-viewer';
+
+const markdownWithFrontMatter = `---
+title: "My Document"
+author: "John Doe"
+lastModified: "2025-01-20"
+locale: "nl-BE"
+---
+
+# My Content
+`;
+
+const { frontMatter, content } = parseFrontMatter(markdownWithFrontMatter);
+
+<FrontMatterDisplay frontMatter={frontMatter} mode="full" />
+```
+
+### Types
+
+#### `FileNode`
+```typescript
+interface FileNode {
+  name: string;
+  path: string;
+  type: 'file' | 'folder';
+  children?: FileNode[];
+}
+```
+
+#### `ThemeContextType`
+```typescript
+interface ThemeContextType {
+  theme: 'light' | 'dark';
+  toggleTheme?: () => void;
+}
+```
+
+#### `FrontMatter`
+```typescript
+interface FrontMatter {
+  title?: string;
+  description?: string;
+  author?: string;
+  date?: string;
+  lastModified?: string;
+  version?: string;
+  category?: string;
+  section?: string;
+  order?: number;
+  tags?: string[];
+  keywords?: string[];
+  toc?: boolean;
+  sidebar?: boolean;
+  locale?: string; // Date formatting locale (e.g., 'en-US', 'nl-BE', 'fr-BE')
+  breadcrumbs?: Array<{
+    name: string;
+    path: string;
+  }>;
+  related?: Array<{
+    title: string;
+    path: string;
+  }>;
+  [key: string]: any; // Allow additional custom properties
+}
+```
+
+#### `ParsedMarkdown`
+```typescript
+interface ParsedMarkdown {
+  frontMatter: FrontMatter | null;
+  content: string;
+}
+```
+
+## 🔧 Complete Project Setup
+
+### 1. Create Your Documentation Project
+
+```bash
+mkdir my-docs-site
+cd my-docs-site
+npm init -y
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install @asafarim/simple-md-viewer react react-dom react-router-dom
+npm install --save-dev vite @vitejs/plugin-react typescript
+npm install express cors concurrently
+```
+
+### 3. Create Project Structure
+
+```
+my-docs-site/
+├── package.json
+├── vite.config.ts
+├── server.js
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx
+│   └── vite-env.d.ts
+├── public/
+│   └── index.html
+└── md-docs/                    # Your markdown files
+    ├── README.md
+    ├── getting-started.md
+    └── api/
+        └── reference.md
+```
+
+### 4. Configure Vite
+
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 5173,
+  },
 });
-
-app.listen(PORT);
 ```
 
-### Docker Deployment
+### 5. Setup Scripts
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "node server.js",
+    "start": "concurrently \"npm run dev\" \"npm run serve\""
+  }
+}
+```
+
+### 6. Create Your App
+
+```tsx
+// src/App.tsx
+import React, { useState, useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
+import { MarkdownContent, ThemeProvider } from '@asafarim/simple-md-viewer';
+import '@asafarim/simple-md-viewer/dist/style.css';
+
+function App() {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('smv-theme') || 'light';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      return newTheme;
+    });
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  return (
+    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+      <div className={`app ${theme}`}>
+        <HashRouter>
+          <MarkdownContent 
+            apiBaseUrl="http://localhost:3300"
+            showHomePage={true}
+          />
+        </HashRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+```
+
+```tsx
+// src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+### 7. Run Your Documentation Site
+
+```bash
+npm start
+```
+
+Your documentation site will be available at `http://localhost:5173`
+
+## 📱 Mobile Responsiveness
+
+The viewer is fully responsive with:
+
+- **Mobile (< 768px)**: Collapsible sidebar overlay with touch-friendly navigation
+- **Tablet (768px - 1024px)**: Optimized layout with compressed sidebar
+- **Desktop (> 1024px)**: Full sidebar and content layout
+
+### Mobile-Specific Features
+
+- Touch-friendly navigation
+- Collapsible sidebar with backdrop overlay
+- Optimized typography scaling
+- Gesture-friendly interface elements
+- Proper viewport handling
+
+## 🎯 Use Cases
+
+### 1. 📖 Project Documentation
+Perfect for API documentation, user guides, and technical specifications.
+
+### 2. 🏢 Team Knowledge Base
+Organize team processes, onboarding materials, and internal documentation.
+
+### 3. 📝 Blog & Articles
+Create a clean, navigable blog or article collection.
+
+### 4. 🎓 Educational Content
+Build course materials, tutorials, and learning resources.
+
+### 5. 📋 Specification Documents
+Document project requirements, architecture, and technical specifications.
+
+### 6. 🎯 Full-Width Content Display (`hideFileTree={true}`)
+When you want to display markdown content without file navigation, perfect for:
+
+#### **Single Document Viewer**
+```tsx
+<MarkdownContent 
+  showHomePage={false}
+  apiBaseUrl="http://localhost:3300"
+  hideFileTree={true}
+/>
+```
+- **Blog post viewer**: Display a single article without navigation clutter
+- **Embedded documentation**: Integrate into existing dashboards or applications
+- **Mobile-optimized reading**: Maximize content space on small screens
+- **Presentation mode**: Full-width display for presentations or demos
+
+### 7. 🎨 Minimalistic UI (`hideHeader={true}`, `hideFooter={true}`)
+For ultra-clean integration into existing applications:
+
+#### **Embedded Widget Mode**
+```tsx
+<MarkdownContent 
+  showHomePage={false}
+  apiBaseUrl="/api/docs"
+  hideFileTree={true}
+  hideHeader={true}
+  hideFooter={true}
+/>
+```
+- **API documentation widgets**: Clean docs in admin panels
+- **Help system integration**: Context-sensitive help without UI conflicts
+- **Mobile app embedding**: Ultra-minimal chrome for mobile apps
+- **Dashboard content**: Documentation that blends with existing UI
+- **White-label solutions**: Remove branding for third-party integrations
+- **Mobile-optimized reading**: Maximize content space on small screens
+- **Presentation mode**: Full-width display for presentations or demos
+
+#### **Content-First Applications**
+```tsx
+// Perfect for applications where content is king
+function DocumentReader() {
+  return (
+    <div className="full-screen-reader">
+      <MarkdownContent 
+        showHomePage={true}
+        apiBaseUrl="/api/docs"
+        hideFileTree={true}
+      />
+    </div>
+  );
+}
+```
+
+#### **When to Use `hideFileTree={true}`:**
+- ✅ **Single document focus**: When users should focus on one piece of content
+- ✅ **Embedded viewers**: Integrating into existing applications with their own navigation
+- ✅ **Mobile-first experience**: Maximizing content space on smaller screens
+- ✅ **Clean presentation**: When file tree navigation would be distracting
+- ✅ **Dashboard integration**: Embedding docs into admin panels or dashboards
+
+## 🔧 Advanced Configuration
+
+### Environment Variables
+
+```env
+# .env
+VITE_API_BASE_URL=http://localhost:3300
+VITE_DEFAULT_THEME=light
+```
+
+### Custom Package Links
+
+The viewer includes built-in support for package links:
+
+```tsx
+import { CollapsiblePackageLinks } from '@asafarim/simple-md-viewer';
+
+<CollapsiblePackageLinks
+  packageName="@asafarim/simple-md-viewer"
+  githubPath="AliSafari-IT/simple-md-viewer"
+  demoPath="https://alisafari-it.github.io/simple-md-viewer/"
+/>
+```
+
+### Advanced Theme Configuration
+
+```tsx
+import { ThemeProvider } from '@asafarim/simple-md-viewer';
+
+function App() {
+  const [theme, setTheme] = useState(() => {
+    // Check localStorage and system preference
+    const savedTheme = localStorage.getItem('smv-theme');
+    if (savedTheme) return savedTheme;
+    
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('smv-theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+      return newTheme;
+    });
+  };
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      if (!localStorage.getItem('smv-theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  return (
+    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+      {/* Your app content */}
+    </ThemeProvider>
+  );
+}
+```
+
+### 🎛️ Configuration Examples
+
+Here are common configuration patterns for different use cases:
+
+#### **Full-Featured Documentation Site**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3300"
+  showHomePage={true}
+  hideFileTree={false}
+  hideHeader={false}
+  hideFooter={false}
+/>
+```
+
+#### **Mobile-Optimized Content Viewer**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/docs"
+  showHomePage={true}
+  hideFileTree={true}    // Maximize content space
+  hideHeader={false}     // Keep theme toggle and branding
+  hideFooter={true}      // Remove footer for more space
+/>
+```
+
+#### **Embedded Widget (Minimal Chrome)**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/help"
+  showHomePage={false}   // Direct to content
+  hideFileTree={true}    // No navigation needed
+  hideHeader={true}      // Remove all chrome
+  hideFooter={true}      // Ultra-clean integration
+/>
+```
+
+#### **Dashboard Documentation Panel**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/docs"
+  showHomePage={false}
+  hideFileTree={true}    // Clean layout
+  hideHeader={true}      // Integrate with dashboard header
+  hideFooter={false}     // Keep footer for branding
+/>
+```
+
+#### **Blog Post Reader**
+```tsx
+<MarkdownContent 
+  apiBaseUrl="/api/blog"
+  showHomePage={true}
+  hideFileTree={true}    // Focus on content
+  hideHeader={false}     // Keep navigation
+  hideFooter={false}     // Keep branding
+/>
+```
+
+## 🚀 Deployment
+
+### GitHub Pages
+
+```bash
+# Build your project
+npm run build
+
+# Deploy to GitHub Pages
+npm run deploy
+```
+
+### Netlify/Vercel
+
+Simply connect your repository and deploy the `dist` folder.
+
+### Docker
 
 ```dockerfile
 FROM node:18-alpine
@@ -405,112 +1098,62 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-EXPOSE 3500
+EXPOSE 5173
 CMD ["npm", "start"]
-```
-
-### GitHub Pages Deployment
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - run: npm install
-      - run: npm run build
-      - uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
 ```
 
 ## 🛠️ Development
 
-### Local Development Setup
+### Local Development
 
 ```bash
-# Clone the repository
 git clone https://github.com/AliSafari-IT/simple-md-viewer.git
 cd simple-md-viewer
-
-# Install dependencies
-pnpm install
-
-# Start development servers
-pnpm start
+npm install
+npm start
 ```
 
-### Building for Production
+### Building the Library
 
 ```bash
-# Build the application
-pnpm build
-
-# Preview the build
-pnpm preview
-```
-
-### Project Structure
-
-```tree
-simple-md-viewer/
-├── src/
-│   ├── components/
-│   │   ├── FileTree.tsx
-│   │   └── MarkdownViewer.tsx
-│   ├── App.tsx
-│   ├── App.css
-│   └── main.tsx
-├── public/
-├── md-docs/           # Your markdown content
-├── server.js          # Express server
-└── package.json
+npm run build:lib    # Build library for npm
+npm run build        # Build demo application
 ```
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/AliSafari-IT/simple-md-viewer/blob/main/CONTRIBUTING.md).
 
 ### Development Workflow
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes
-4. Run tests: `npm test`
-5. Commit: `git commit -m 'Add amazing feature'`
-6. Push: `git push origin feature/amazing-feature`
-7. Open a Pull Request
+2. Create your feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/AliSafari-IT/simple-md-viewer/blob/main/LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
 - Built with [React](https://reactjs.org/) and [Vite](https://vitejs.dev/)
-- Markdown rendering powered by [react-markdown](https://github.com/remarkjs/react-markdown)
+- Powered by [react-markdown](https://github.com/remarkjs/react-markdown) with [remark-gfm](https://github.com/remarkjs/remark-gfm)
+- YAML parsing by [js-yaml](https://github.com/nodeca/js-yaml)
 - Syntax highlighting by [react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)
-- Icons and styling inspired by modern design systems
+- Package links from [@asafarim/shared](https://www.npmjs.com/package/@asafarim/shared)
 
-## 📞 Support
+## 📞 Support & Links
 
-- 📧 Email: [contact@asafarim.com](mailto:contact@asafarim.com)
-- 🐛 Issues: [GitHub Issues](https://github.com/AliSafari-IT/simple-md-viewer/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/AliSafari-IT/simple-md-viewer/discussions)
+- 📦 **NPM Package**: [npmjs.com/package/@asafarim/simple-md-viewer](https://www.npmjs.com/package/@asafarim/simple-md-viewer)
+- 🌐 **Live Demo**: [alisafari-it.github.io/simple-md-viewer](https://alisafari-it.github.io/simple-md-viewer/#/)
+- 📂 **GitHub Repository**: [github.com/AliSafari-IT/simple-md-viewer](https://github.com/AliSafari-IT/simple-md-viewer)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/AliSafari-IT/simple-md-viewer/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/AliSafari-IT/simple-md-viewer/discussions)
 
 ---
 
-**Made with ❤️ by [SMV simple-md-viewer](https://github.com/AliSafari-IT/simple-md-viewer)**
+**Made with ❤️ by [Ali Safari](https://github.com/AliSafari-IT)**
 
-Happy documenting! 📖✨
+*Transform your markdown files into a beautiful, professional documentation site! 📖✨*
