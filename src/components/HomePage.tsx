@@ -13,7 +13,7 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ fileTree, findReadmeNode, loading }) => {
   const navigate = useNavigate();
   const [rootReadmeContent, setRootReadmeContent] = React.useState('');
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3301";
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3300";
 
   const handleExploreClick = () => {
     if (fileTree) {

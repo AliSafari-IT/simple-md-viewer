@@ -74,7 +74,7 @@ interface MarkdownContentProps {
    * Default is true.
    */
   enableDirectorySorting?: boolean;
-  
+
 }
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({
@@ -95,8 +95,10 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
   const [fileTree, setFileTree] = useState<FileNode | null>(null);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [selectedDirectory, setSelectedDirectory] = useState<FileNode | null>(null);
+  const [detailedDirectory, setDetailedDirectory] = useState<FileNode | null>(null);
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [directoryLoading, setDirectoryLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -186,6 +188,26 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
     }
   };
 
+  const fetchDirectoryDetails = async (directoryPath: string) => {
+    try {
+      setDirectoryLoading(true);
+      const response = await fetch(`${apiBaseUrl}/api/directory-details?path=${encodeURIComponent(directoryPath)}`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch directory details: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      // console.log('fetchDirectoryDetails received data:', data);
+      setDetailedDirectory(data);
+      setDirectoryLoading(false);
+    } catch (error) {
+      console.error("Error fetching directory details:", error);
+      setError("Failed to load directory details.");
+      setDirectoryLoading(false);
+    }
+  };
+
   const handleFileSelect = async (path: string) => {
     try {
       setLoading(true);
@@ -200,7 +222,12 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
           if (directoryViewEnabled) {
             setSelectedFile(null);
             setSelectedDirectory(selectedNode);
+            setDetailedDirectory(null); // Clear previous detailed data
             setMarkdownContent("");
+            
+            // console.log('About to fetch directory details for:', path);
+            // Fetch detailed directory information with sizes
+            await fetchDirectoryDetails(path);
             
             // Use React Router navigation
             if (path !== filePath) {
@@ -375,21 +402,32 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
               loading={loading}
             />
           ) : selectedDirectory && directoryViewEnabled ? (
-            <DirectoryView
-              directory={selectedDirectory}
-              onFileSelect={(path) => {
-                handleFileSelect(path);
-                setSidebarOpen(false);
-              }}
-              onDirectorySelect={(path) => {
-                handleFileSelect(path);
-                setSidebarOpen(false);
-              }}
-              viewStyle={directoryViewStyle}
-              showBreadcrumbs={showDirectoryBreadcrumbs}
-              enableSorting={enableDirectorySorting}
-              enableFiltering={enableDirectorySorting}
-            />
+            (() => {
+              // console.log('MarkdownContent rendering DirectoryView with:', { 
+              //   selectedDirectory: selectedDirectory?.name, 
+              //   detailedDirectory: detailedDirectory?.name, 
+              //   finalDirectory: (detailedDirectory || selectedDirectory)?.name,
+              //   finalDirectoryChildren: (detailedDirectory || selectedDirectory)?.children?.map(c => ({ name: c.name, size: c.size }))
+              // });
+              return (
+                <DirectoryView
+                  directory={detailedDirectory || selectedDirectory}
+                  onFileSelect={(path) => {
+                    handleFileSelect(path);
+                    setSidebarOpen(false);
+                  }}
+                  onDirectorySelect={(path) => {
+                    handleFileSelect(path);
+                    setSidebarOpen(false);
+                  }}
+                  viewStyle={directoryViewStyle}
+                  showBreadcrumbs={showDirectoryBreadcrumbs}
+                  enableSorting={enableDirectorySorting}
+                  enableFiltering={enableDirectorySorting}
+                  loading={directoryLoading}
+                />
+              );
+            })()
           ) : loading && !markdownContent ? (
             <p>Loading content...</p>
           ) : error && !markdownContent ? (

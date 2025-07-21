@@ -37,7 +37,7 @@ function App() {
   });
 
   // Load environment variables for API base URL
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3301';
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3300';
   console.log("API Base URL:", apiBaseUrl);
 
   const toggleTheme = () => {

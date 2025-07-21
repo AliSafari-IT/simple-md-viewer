@@ -14,6 +14,7 @@ interface DirectoryViewProps {
   showBreadcrumbs?: boolean;
   enableSorting?: boolean;
   enableFiltering?: boolean;
+  loading?: boolean;
   className?: string;
 }
 
@@ -30,6 +31,7 @@ const DirectoryView: React.FC<DirectoryViewProps> = ({
   showBreadcrumbs = true,
   enableSorting = true,
   enableFiltering = true,
+  loading = false,
   className = "",
 }) => {
   const [sortBy, setSortBy] = useState<SortBy>("name");
@@ -57,9 +59,8 @@ const DirectoryView: React.FC<DirectoryViewProps> = ({
   // Filter and sort directory contents
   const sortedAndFilteredContents = useMemo(() => {
     if (!directory.children) return [];
-
     let filtered = directory.children;
-
+    
     // Apply filter
     if (filterQuery && enableFiltering) {
       filtered = filtered.filter((item) =>
@@ -175,8 +176,8 @@ const DirectoryView: React.FC<DirectoryViewProps> = ({
     }
   };
 
-  const formatFileSize = (size?: number) => {
-    if (!size) return "-";
+  const formatFileSize = (size?: number, type?: string) => {    
+    if (!size && size !== 0) return "-";
 
     const units = ["B", "KB", "MB", "GB"];
     let unitIndex = 0;
@@ -187,7 +188,10 @@ const DirectoryView: React.FC<DirectoryViewProps> = ({
       unitIndex++;
     }
 
-    return `${fileSize.toFixed(1)} ${units[unitIndex]}`;
+    const formattedSize = `${fileSize.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+    
+    // Add folder indicator for folders
+    return type === "folder" ? `${formattedSize} (total)` : formattedSize;
   };
 
   const formatDate = (dateString?: string) => {
@@ -280,7 +284,11 @@ const DirectoryView: React.FC<DirectoryViewProps> = ({
       <div
         className={`directory-content directory-content-${selectedViewStyle}`}
       >
-        {sortedAndFilteredContents.length === 0 ? (
+        {loading ? (
+          <div className="directory-loading">
+            <p>Loading directory details...</p>
+          </div>
+        ) : sortedAndFilteredContents.length === 0 ? (
           <div className="directory-empty">
             {filterQuery
               ? "No items match your filter"
@@ -324,12 +332,10 @@ const DirectoryView: React.FC<DirectoryViewProps> = ({
                     {item.name}
                   </div>
                   <div className="table-cell size-cell">
-                    {item.type === "file"
-                      ? formatFileSize((item as any).size)
-                      : "-"}
+                    {formatFileSize(item.size, item.type)}
                   </div>
                   <div className="table-cell modified-cell">
-                    {formatDate((item as any).lastModified)}
+                    {formatDate(item.lastModified)}
                   </div>
                 </div>
               ))}
