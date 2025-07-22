@@ -9,7 +9,7 @@ import HomePage from "./HomePage";
 import { ThemeContext } from "../contexts/ThemeContext";
 import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
-import logoSvg from "/smv-logo.svg";
+import logoSvg from "/logo.svg";
 
 interface MarkdownContentProps {
   showHomePage?: boolean;
@@ -74,7 +74,32 @@ interface MarkdownContentProps {
    * Default is true.
    */
   enableDirectorySorting?: boolean;
-
+  /**
+   * Configuration for package links in the header.
+   * If not provided, default values will be used.
+   */
+  packageLinks?: {
+    /**
+     * The name of the npm package.
+     * Default is "@asafarim/simple-md-viewer".
+     */
+    packageName?: string;
+    /**
+     * The GitHub repository path.
+     * Default is "simple-md-viewer".
+     */
+    githubPath?: string;
+    /**
+     * The URL to the demo site.
+     * Default is "https://alisafari-it.github.io/simple-md-viewer/#/".
+     */
+    demoPath?: string;
+    /**
+     * Whether to show the package links section.
+     * Default is true.
+     */
+    show?: boolean;
+  };
 }
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({
@@ -89,6 +114,12 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
   directoryViewStyle = 'list',
   showDirectoryBreadcrumbs = true,
   enableDirectorySorting = true,
+  packageLinks = {
+    packageName: "@asafarim/simple-md-viewer",
+    githubPath: "simple-md-viewer",
+    demoPath: "https://alisafari-it.github.io/simple-md-viewer/#/",
+    show: true
+  },
 }) => {
   const { "*": filePath } = useParams<{ "*": string }>();
   const navigate = useNavigate();
@@ -322,6 +353,10 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
               src={logoSvg}
               alt="Simple Markdown Viewer Logo"
               className="logo"
+              style={{ display: 'block', width: '60px', height: 'auto' }}
+              onError={(e) => {
+                e.currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg";
+              }}
             />
             <div>
               <h1 className="title">SMV</h1>
@@ -332,13 +367,15 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
             </div>
           </div>
 
-          <div className="package-links-wrapper">
-            <CollapsiblePackageLinks
-              packageName="@asafarim/simple-md-viewer"
-              githubPath="simple-md-viewer"
-              demoPath="https://alisafari-it.github.io/simple-md-viewer/#/"
-            />
-          </div>
+          {packageLinks && packageLinks.show !== false && (
+            <div className="package-links-wrapper">
+              <CollapsiblePackageLinks
+                packageName={packageLinks.packageName || "@asafarim/simple-md-viewer"}
+                githubPath={packageLinks.githubPath || "simple-md-viewer"}
+                demoPath={packageLinks.demoPath || "https://alisafari-it.github.io/simple-md-viewer/#/"}
+              />
+            </div>
+          )}
 
           <div className="header-controls">
             <button

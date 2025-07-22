@@ -70,6 +70,12 @@ function App() {
                   hideFooter={false}
                   showFrontMatter={true}
                   frontMatterMode={'full'}
+                  packageLinks={{
+                    packageName: "@asafarim/simple-md-viewer",
+                    githubPath: "simple-md-viewer",
+                    demoPath: "https://alisafari-it.github.io/simple-md-viewer/#/README.md",
+                    show: true
+                  }}
                 />
               } 
             />

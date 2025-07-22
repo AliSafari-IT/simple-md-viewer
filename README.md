@@ -3,8 +3,11 @@
 A professional, responsive markdown viewer library for React applications that displays markdown files from a specified folder structure with an elegant file tree navigation and advanced YAML front matter support.
 
 [![npm version](https://badge.fury.io/js/@asafarim%2Fsimple-md-viewer.svg)](https://www.npmjs.com/package/@asafarim/simple-md-viewer)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://alisafari-it.github.io/simple-md-viewer/#/README.md)
+[![GitHub](https://img.shields.io/badge/github-repo-blue)](https://github.com/AliSafari-IT/simple-md-viewer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://alisafari-it.github.io/simple-md-viewer/)
+[![Demo repo](https://img.shields.io/badge/demo-repo-purple)](https://github.com/AliSafari-IT/demo-simple-md-viewer)
+
 
 ## ✨ Features
 
@@ -24,9 +27,35 @@ A professional, responsive markdown viewer library for React applications that d
 - 🎛️ **Minimalistic UI Options**: Hide header and footer for clean embedding
 - ♿ **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
 
+## 📄 What's New in v1.5.1
+
+### 🔗 Customizable Package Links
+
+Fully customizable package links in the header with comprehensive configuration options:
+
+- **Custom Package Name**: Set your own npm package name for the header links
+- **Custom GitHub Path**: Configure your own GitHub repository path
+- **Custom Demo URL**: Set a custom demo site URL
+- **Toggle Visibility**: Show or hide the package links section entirely
+- **Default Fallbacks**: Sensible defaults if partial configuration is provided
+
+```tsx
+// Example usage with custom package links
+<MarkdownContent 
+  apiBaseUrl="http://localhost:3300"
+  packageLinks={{
+    packageName: "your-app-or-package-name",
+    githubPath: "your-github-repo",
+    demoPath: "https://your-live-demo-site.com",
+    show: true  // Set to false to hide package links
+  }}
+/>
+```
+
 ## 📄 What's New in v1.5.0
 
 ### 📂 Enhanced Directory Browsing
+
 Professional directory content viewing with comprehensive file information:
 
 - **Multiple View Styles**: Switch between list, grid, and detailed table views
@@ -42,7 +71,8 @@ Professional directory content viewing with comprehensive file information:
 ![Mobile Directory View](https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/main/public/md-mobile-detail-view.png)
 *Mobile-optimized directory view with touch-friendly interface*
 
-#### Directory View Features:
+#### Directory View Features
+
 - **List View**: Clean, compact file listing with icons
 - **Grid View**: Visual grid layout with larger icons and file types  
 - **Detailed View**: Comprehensive table with file sizes, modification dates, and metadata
@@ -53,6 +83,7 @@ Professional directory content viewing with comprehensive file information:
 ## 📄 What's New in v1.4.0
 
 ### 🎯 YAML Front Matter Support
+
 Professional YAML front matter parsing and display with comprehensive metadata support:
 
 - **Multiple Display Modes**: Choose from `full`, `minimal`, `header-only`, or `hidden` display modes
@@ -63,6 +94,7 @@ Professional YAML front matter parsing and display with comprehensive metadata s
 - **GitHub Flavored Markdown**: Enhanced table support and complete GFM compatibility
 
 #### Example Front Matter
+
 ```yaml
 ---
 title: "API Documentation"
@@ -86,7 +118,11 @@ This will be beautifully rendered with proper styling, showing formatted dates, 
 
 ## 🎪 Live Demo
 
-Experience the viewer in action: **[Live Demo](https://alisafari-it.github.io/simple-md-viewer/#/)**
+Experience the viewer in action: **[Live Demo](https://alisafari-it.github.io/simple-md-viewer/#/README.md)**
+
+### Demo Repository
+
+Check out our **[Demo Repository](https://github.com/AliSafari-IT/demo-simple-md-viewer)** for complete examples of how to integrate and use the Simple Markdown Viewer in your projects. This repository contains working examples with different configuration options and implementation patterns.
 
 ![Simple Markdown Viewer Demo](https://raw.githubusercontent.com/AliSafari-IT/simple-md-viewer/main/public/smv.png)
 
@@ -158,6 +194,12 @@ function App() {
             apiBaseUrl="http://localhost:3300" 
             showHomePage={true}
             hideFileTree={false}
+            packageLinks={{
+              packageName: "@asafarim/simple-md-viewer",
+              githubPath: "simple-md-viewer",
+              demoPath: "https://alisafari-it.github.io/simple-md-viewer/#/README.md",
+              show: true
+            }}
           />
         </HashRouter>
       </div>
@@ -231,6 +273,9 @@ function FullWidthViewer() {
             apiBaseUrl="http://localhost:3300" 
             showHomePage={true}
             hideFileTree={true}  // 🎯 This hides the file tree for full-width content
+            packageLinks={{
+              show: false  // 🎯 Hide package links for cleaner interface
+            }}
           />
         </HashRouter>
       </div>
@@ -240,6 +285,7 @@ function FullWidthViewer() {
 ```
 
 **Perfect for:**
+
 - 📱 **Mobile-first applications** - Maximum content space
 - 🎯 **Single document focus** - Remove navigation distractions  
 - 🔧 **Embedded viewers** - Integrate into existing dashboards
@@ -267,6 +313,9 @@ function MinimalViewer() {
             hideFileTree={true}   // 🎯 Hide file tree for clean layout
             hideHeader={true}     // 🎯 Hide header for minimal chrome
             hideFooter={true}     // 🎯 Hide footer for clean integration
+            packageLinks={{
+              show: false  // 🎯 Hide package links (though header is already hidden)
+            }}
           />
         </HashRouter>
       </div>
@@ -276,15 +325,16 @@ function MinimalViewer() {
 ```
 
 **Perfect for:**
+
 - 🔗 **API documentation widgets** - Embed docs in admin panels
 - 📱 **Mobile apps** - Ultra-clean content display
 - 🎛️ **Dashboard integration** - Content without competing UI elements
 - 📖 **Help systems** - Context-sensitive documentation
 - 🎯 **Content-only views** - Maximum focus on the markdown content
 
-## � Front Matter Showcase
+## 📚 Usage Examples
 
-Here are comprehensive examples showcasing the advanced YAML front matter capabilities:
+Here are some common usage examples (also available in our [Demo Repository](https://github.com/AliSafari-IT/demo-simple-md-viewer)): showcasing the advanced YAML front matter capabilities:
 
 ### Full-Featured Documentation with Front Matter
 
@@ -486,12 +536,14 @@ category: "Documentation"
 ```
 
 **Directory View Features Demonstrated:**
+
 - 📊 **File size calculation**: Real-time size display for files and folders
 - 📅 **Modification dates**: Last modified timestamps with localized formatting  
 - 🔍 **Search and filtering**: Instant search through directory contents
 - 🎯 **Smart sorting**: Sort by name, type, size, or date with folder prioritization
 - 📱 **Responsive layouts**: Touch-friendly mobile interface with optimized views
 - 🧭 **Navigation**: Breadcrumbs and related page links
+
 ```
 
 **Front Matter Features Demonstrated:**
@@ -713,6 +765,7 @@ Override CSS custom properties to customize the appearance:
 ### Components
 
 #### `MarkdownContent`
+
 The main component providing a complete markdown viewer experience.
 
 ```tsx
@@ -732,7 +785,8 @@ The main component providing a complete markdown viewer experience.
 ```
 
 **Props:**
-- `apiBaseUrl?` (string): Base URL for API endpoints (default: "http://localhost:3300")
+
+- `apiBaseUrl?` (string): Base URL for API endpoints (default: "<http://localhost:3300>")
 - `showHomePage?` (boolean): Whether to show homepage when no file is selected (default: true)
 - `hideFileTree?` (boolean): Hide the file tree sidebar and expand content to full width (default: false)
 - `hideHeader?` (boolean): Hide the header section including logo, theme toggle, and menu (default: false)
@@ -745,6 +799,7 @@ The main component providing a complete markdown viewer experience.
 - `enableDirectorySorting?` (boolean): Enable sorting and filtering in directory view (default: true)
 
 #### `ThemeProvider`
+
 Provides theme context to all child components.
 
 ```tsx
@@ -754,11 +809,13 @@ Provides theme context to all child components.
 ```
 
 **Props:**
+
 - `theme` ("light" | "dark"): Current theme
 - `toggleTheme?` (function): Optional theme toggle function
 - `children` (ReactNode): Child components
 
 #### `MarkdownViewer`
+
 Renders markdown content with syntax highlighting and YAML front matter support.
 
 ```tsx
@@ -770,17 +827,20 @@ Renders markdown content with syntax highlighting and YAML front matter support.
 ```
 
 **Props:**
+
 - `content` (string): Markdown content to render (required)
 - `showFrontMatter?` (boolean): Whether to display YAML front matter (default: true)
 - `frontMatterMode?` ('full' | 'minimal' | 'header-only' | 'hidden'): Front matter display mode (default: 'full')
 
 **Front Matter Display Modes:**
+
 - `'full'`: Shows all front matter metadata in organized sections
 - `'minimal'`: Shows only basic info (author, date, version)
 - `'header-only'`: Shows only title and description
 - `'hidden'`: Hides front matter display entirely
 
 #### `FileTree`
+
 Interactive file tree navigation component.
 
 ```tsx
@@ -792,11 +852,13 @@ Interactive file tree navigation component.
 ```
 
 **Props:**
+
 - `fileTree` (FileNode | null): File tree data structure
 - `onFileSelect` (function): Callback when a file is selected
 - `selectedFile` (string | null): Currently selected file path
 
 #### `DirectoryView`
+
 Advanced directory content browser with multiple view styles and file information.
 
 ```tsx
@@ -813,6 +875,7 @@ Advanced directory content browser with multiple view styles and file informatio
 ```
 
 **Props:**
+
 - `directory` (FileNode): Directory node with children to display (required)
 - `onFileSelect` (function): Callback when a file is selected (required)
 - `onDirectorySelect?` (function): Callback when a directory is selected
@@ -824,11 +887,13 @@ Advanced directory content browser with multiple view styles and file informatio
 - `className?` (string): Additional CSS classes
 
 **View Styles:**
+
 - `'list'`: Compact list view with file icons and names
 - `'grid'`: Grid layout with larger icons and file type labels
 - `'detailed'`: Table view with file sizes, modification dates, and comprehensive metadata
 
 #### `HomePage`
+
 Landing page component showing available documentation.
 
 ```tsx
@@ -840,11 +905,13 @@ Landing page component showing available documentation.
 ```
 
 **Props:**
+
 - `fileTree` (FileNode | null): File tree data
 - `findReadmeNode` (function): Function to find README file
 - `loading` (boolean): Loading state
 
 #### `FrontMatterDisplay`
+
 Displays parsed YAML front matter with professional styling.
 
 ```tsx
@@ -855,10 +922,12 @@ Displays parsed YAML front matter with professional styling.
 ```
 
 **Props:**
+
 - `frontMatter` (FrontMatter): Parsed front matter object (required)
 - `mode?` ('full' | 'minimal' | 'header-only'): Display mode (default: 'full')
 
 **Example Usage:**
+
 ```tsx
 import { parseFrontMatter, FrontMatterDisplay } from '@asafarim/simple-md-viewer';
 
@@ -880,6 +949,7 @@ const { frontMatter, content } = parseFrontMatter(markdownWithFrontMatter);
 ### Types
 
 #### `FileNode`
+
 ```typescript
 interface FileNode {
   name: string;
@@ -890,6 +960,7 @@ interface FileNode {
 ```
 
 #### `ThemeContextType`
+
 ```typescript
 interface ThemeContextType {
   theme: 'light' | 'dark';
@@ -898,6 +969,7 @@ interface ThemeContextType {
 ```
 
 #### `FrontMatter`
+
 ```typescript
 interface FrontMatter {
   title?: string;
@@ -927,6 +999,7 @@ interface FrontMatter {
 ```
 
 #### `ParsedMarkdown`
+
 ```typescript
 interface ParsedMarkdown {
   frontMatter: FrontMatter | null;
@@ -1083,24 +1156,31 @@ The viewer is fully responsive with:
 ## 🎯 Use Cases
 
 ### 1. 📖 Project Documentation
+
 Perfect for API documentation, user guides, and technical specifications.
 
 ### 2. 🏢 Team Knowledge Base
+
 Organize team processes, onboarding materials, and internal documentation.
 
 ### 3. 📝 Blog & Articles
+
 Create a clean, navigable blog or article collection.
 
 ### 4. 🎓 Educational Content
+
 Build course materials, tutorials, and learning resources.
 
 ### 5. 📋 Specification Documents
+
 Document project requirements, architecture, and technical specifications.
 
 ### 6. 🎯 Full-Width Content Display (`hideFileTree={true}`)
+
 When you want to display markdown content without file navigation, perfect for:
 
 #### **Single Document Viewer**
+
 ```tsx
 <MarkdownContent 
   showHomePage={false}
@@ -1108,15 +1188,18 @@ When you want to display markdown content without file navigation, perfect for:
   hideFileTree={true}
 />
 ```
+
 - **Blog post viewer**: Display a single article without navigation clutter
 - **Embedded documentation**: Integrate into existing dashboards or applications
 - **Mobile-optimized reading**: Maximize content space on small screens
 - **Presentation mode**: Full-width display for presentations or demos
 
 ### 7. 🎨 Minimalistic UI (`hideHeader={true}`, `hideFooter={true}`)
+
 For ultra-clean integration into existing applications:
 
 #### **Embedded Widget Mode**
+
 ```tsx
 <MarkdownContent 
   showHomePage={false}
@@ -1126,6 +1209,7 @@ For ultra-clean integration into existing applications:
   hideFooter={true}
 />
 ```
+
 - **API documentation widgets**: Clean docs in admin panels
 - **Help system integration**: Context-sensitive help without UI conflicts
 - **Mobile app embedding**: Ultra-minimal chrome for mobile apps
@@ -1135,6 +1219,7 @@ For ultra-clean integration into existing applications:
 - **Presentation mode**: Full-width display for presentations or demos
 
 #### **Content-First Applications**
+
 ```tsx
 // Perfect for applications where content is king
 function DocumentReader() {
@@ -1151,6 +1236,7 @@ function DocumentReader() {
 ```
 
 #### **When to Use `hideFileTree={true}`:**
+
 - ✅ **Single document focus**: When users should focus on one piece of content
 - ✅ **Embedded viewers**: Integrating into existing applications with their own navigation
 - ✅ **Mobile-first experience**: Maximizing content space on smaller screens
@@ -1234,6 +1320,7 @@ function App() {
 Here are common configuration patterns for different use cases:
 
 #### **Full-Featured Documentation Site**
+
 ```tsx
 <MarkdownContent 
   apiBaseUrl="http://localhost:3300"
@@ -1245,6 +1332,7 @@ Here are common configuration patterns for different use cases:
 ```
 
 #### **Mobile-Optimized Content Viewer**
+
 ```tsx
 <MarkdownContent 
   apiBaseUrl="/api/docs"
@@ -1256,6 +1344,7 @@ Here are common configuration patterns for different use cases:
 ```
 
 #### **Embedded Widget (Minimal Chrome)**
+
 ```tsx
 <MarkdownContent 
   apiBaseUrl="/api/help"
@@ -1267,6 +1356,7 @@ Here are common configuration patterns for different use cases:
 ```
 
 #### **Dashboard Documentation Panel**
+
 ```tsx
 <MarkdownContent 
   apiBaseUrl="/api/docs"
@@ -1278,6 +1368,7 @@ Here are common configuration patterns for different use cases:
 ```
 
 #### **Blog Post Reader**
+
 ```tsx
 <MarkdownContent 
   apiBaseUrl="/api/blog"
