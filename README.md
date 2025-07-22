@@ -8,6 +8,7 @@ A professional, responsive markdown viewer library for React applications that d
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Demo repo](https://img.shields.io/badge/demo-repo-purple)](https://github.com/AliSafari-IT/demo-simple-md-viewer)
 
+[Click here to view Working Demo along with a how-to document to employ the package.](https://github.com/alisafari-it/demo-simple-md-viewer)
 
 ## ✨ Features
 
